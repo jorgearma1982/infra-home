@@ -1,0 +1,28 @@
+---
+# tasks file for general-settings
+
+- name: Configurar el nombre de host a nivel kernel
+  hostname: name={{ hostname_name }}
+
+- name: Configurar el nombre de host persistente
+  copy: content='{{ hostname_name }}' dest='/etc/hostname' force='yes'
+  when: hostname_name is defined
+
+- name: Configurar resolución de nombres local
+  template:
+    src: default-hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Instalar paquete de zonas horarias
+  apt:
+    name:
+      - tzdata
+    state: latest
+
+- name: Configurar zona horaria
+  timezone:
+    name: "{{ timezone }}"

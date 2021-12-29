@@ -1,0 +1,8 @@
+---
+# handlers file for general-settings
+
+- name: restart wpa_supplicant
+  service: name=wpa_supplicant state=restarted
+
+- name: restart dhcpcd
+  service: name=dhcpcd state=restarted

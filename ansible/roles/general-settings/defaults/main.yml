@@ -1,0 +1,7 @@
+---
+# defaults file for general-settings
+# system
+hostname_fqdn: "{{ inventory_hostname }}"
+hostname_name: "{{ hostname_fqdn.split('.').0 }}"
+timezone: "America/Mexico_City"
+
