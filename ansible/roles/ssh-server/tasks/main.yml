@@ -1,0 +1,27 @@
+---
+# tasks file for ssh-server
+
+- name: Instalar el servicio openssh
+  apt:
+    name:
+      - openssh-server
+      - openssh-client
+    state: latest
+
+- name: Asegurar configuracion de servicio ssh
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    validate: /usr/sbin/sshd -T -f %s
+    block: |
+      PermitRootLogin no
+      MaxAuthTries 3
+      MaxSessions 5
+      PasswordAuthentication no
+  register: sshd
+
+- name: Reiniciar servicio ssh
+  service:
+    name: sshd
+    state: restarted
+  when: sshd.changed == true
+

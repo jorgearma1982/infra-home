@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Jorge Armando Medina
+  description: Tasks for setting up local ssh service
+  company: KronOps
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+  - name: Ubuntu
+    versions:
+    - focal
+  categories:
+  - networking
+dependencies: []
