@@ -1,0 +1,18 @@
+---
+# tasks file for cgroups
+
+- name: Agregar soporte cgroups de cpu y memoria al kernel
+  lineinfile:
+    path: /boot/cmdline.txt
+    backrefs: yes
+    regexp: '^(.*)rootwait$'
+    line: '\1rootwait cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
+  register: cmdline
+
+- name: Reiniciar el nodo par habilitar cgroup para cpu y memoria
+  shell: nohup bash -c "/bin/sleep 5 && /sbin/shutdown -r now" &
+  when: cmdline.changed == true
+
+- name: Esperar a que el nodo reinicie
+  wait_for_connection: timeout=300 delay=30
+  when: cmdline.changed == true
