@@ -95,6 +95,7 @@ Listo ya tienes ansible funcionando.
 Antes de ejecutar el playbook debemos validar que la sintaxis está correcta:
 
 ```
+$ cd ansible
 $ ansible-playbook --syntax-check deploy-master.yml
 $ ansible-playbook --syntax-check deploy-workers.yml
 ```
@@ -108,6 +109,7 @@ En caso de que no aparezca ningún error.
 Para desplegar k3s en el nodo maestro ejecutamos:
 
 ```
+$ cd ansible
 $ ansible-playbook deploy-master.yml --tags k3s_install
 ```
 
@@ -116,6 +118,7 @@ $ ansible-playbook deploy-master.yml --tags k3s_install
 Para desplegar k3s en los nodos workers ejecutamos:
 
 ```
+$ cd ansible
 $ ansible-playbook deploy-workers.yml --tags k3s_install
 ```
 
@@ -140,6 +143,7 @@ $ kubectl get nodes -o wide
 Para desinstalar k3s en el nodo maestro ejecutamos:
 
 ```
+$ cd ansible
 $ ansible-playbook deploy-master.yml --tags k3s_uninstall
 ```
 
@@ -148,6 +152,7 @@ $ ansible-playbook deploy-master.yml --tags k3s_uninstall
 Para desinstalar k3s en los nodos workers ejecutamos:
 
 ```
+$ cd ansible
 $ ansible-playbook deploy-workers.yml --tags k3s_uninstall
 ```
 
