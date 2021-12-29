@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Jorge Medina
+  description: Install ntp client on linux server
+  company: KronOps
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+  - name: Ubuntu
+    versions:
+    - focal
+  categories:
+  - networking
+dependencies: []

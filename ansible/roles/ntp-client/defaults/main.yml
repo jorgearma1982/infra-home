@@ -1,0 +1,3 @@
+---
+# defaults file for ntp-client
+ntp_server: "ntp.metas.ch"
