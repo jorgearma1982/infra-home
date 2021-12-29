@@ -1,0 +1,24 @@
+---
+# Deploy k3s-workers
+- hosts: workers
+  become: true
+
+  pre_tasks:
+  - name: Actualizar paquetes del sistema
+    apt:
+      update_cache: "yes"
+      upgrade: "yes"
+
+  roles:
+    - general-settings
+    - ntp-client
+    - ssh-server
+    - cgroups
+    - nfs-client
+    - k3s-agent
+
+  post_tasks:
+  - name: Limpiar paquetes del cache
+    apt:
+      autoclean: "yes"
+      autoremove: "yes"
