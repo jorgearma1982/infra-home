@@ -1,35 +1,41 @@
 ---
 # tasks file for k3s-agent
 
+- name: Desactivar memoria swap
+  shell: dphys-swapfile swapoff
+
+- name: Eliminar archivo swapfile
+  shell: dphys-swapfile uninstall
+
+- name: Capturar estado de memoria swap
+  shell: free -m
+  register: free
+
+- name: Mostrar estado de memoria swap
+  debug: var=free.stdout_lines
+
+- name: Desactivar el servicio dphys-swapfile
+  service:
+    name: dphys-swapfile.service
+    state: stopped
+    enabled: no
+
 - name: Limpiar reglas de firewall iptables
   iptables:
     flush: yes
   register: flushed
-  tags:
-    - k3s_install
 
 - name: Configurar alternativa de iptables a iptables-legacy
   alternatives:
     name: iptables
     path: /usr/sbin/iptables-legacy
   when: flushed.changed
-  tags:
-    - k3s_install
 
 - name: Configurar alternativa de ip6tables a ip6tables-legacy
   alternatives:
     name: ip6tables
     path: /usr/sbin/ip6tables-legacy
   when: flushed.changed
-  tags:
-    - k3s_install
 
 - name: Instalar agente k3s
   shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
-  tags:
-    - k3s_install
-
-- name: Desinstalar agente k3s
-  shell: /usr/local/bin/k3s-agent-uninstall.sh
-  tags:
-    - k3s_uninstall

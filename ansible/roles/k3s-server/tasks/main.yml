@@ -1,45 +1,47 @@
 ---
 # tasks file for k3s-server
 
+- name: Desactivar memoria swap
+  shell: dphys-swapfile swapoff
+
+- name: Eliminar archivo swapfile
+  shell: dphys-swapfile uninstall
+
+- name: Capturar estado de memoria swap
+  shell: free -m
+  register: free
+
+- name: Mostrar estado de memoria swap
+  debug: var=free.stdout_lines
+
+- name: Desactivar el servicio dphys-swapfile
+  service:
+    name: dphys-swapfile.service
+    state: stopped
+    enabled: no
+
 - name: Limpiar reglas firewall iptables
   iptables:
     flush: yes
   register: flushed
-  tags:
-    - k3s_install
 
 - name: Configurar alternativa de iptables a iptables-legacy
   alternatives:
     name: iptables
     path: /usr/sbin/iptables-legacy
   when: flushed.changed
-  tags:
-    - k3s_install
 
 - name: Configurar alternativa de ip6tables a ip6tables-legacy
   alternatives:
     name: ip6tables
     path: /usr/sbin/ip6tables-legacy
   when: flushed.changed
-  tags:
-    - k3s_install
 
 - name: Instalar servidor k3s
   shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 644 --disable traefik --disable servicelb
-  tags:
-    - k3s_install
 
 - name: Get server token
   shell: cat /var/lib/rancher/k3s/server/node-token
-  tags:
-    - k3s_install
 
 - name: Taint nodo maestro para no schedule
   shell: kubectl taint --overwrite node k3s-master node-role.kubernetes.io/master=true:NoSchedule
-  tags:
-    - k3s_install
-
-- name: Desinstalar servidor k3s
-  shell: /usr/local/bin/k3s-uninstall.sh
-  tags:
-    - k3s_uninstall

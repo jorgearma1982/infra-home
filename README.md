@@ -12,8 +12,8 @@ diseñado para cargas de trabajo Edge productivas, desatendidas, con recursos li
 Es un sistema simplificado y seguro ya que esta empaquetado en un solo binario de <50MB que reduce las dependencias
 y pasos para instalar, ejecutar y auto-actualizar un cluster de producción.
 
-Soporta arquitecturas `ARM64` y `ARMv7`, funciona muy bien desde algo tan pequeño coo una Raspberry Pi hasta en una
-instancia de AWS `a1.4xlarge` con 32GiB.
+Soporta arquitecturas `ARM64` y `ARMv7`, funciona muy bien desde algo tan pequeño como una Raspberry Pi hasta en una
+instancia de AWS `a1.4xlarge` con 32GB.
 
 ## Requisitos
 
@@ -62,7 +62,16 @@ Ahora debes generar tus llaves RSA usando el script:
 $ scripts/generate-ssh-keys.sh
 ```
 
-Este script genera un par de llaves en `inventory/.ssh`.
+Este script genera un par de llaves en `ansible/inventory/.ssh`.
+
+**IMPORTANTE:** No debe almacenar en el repositorio git las llaves ssh ni el archivo de inventario. Almacene estos
+archivos en una herramienta para gestionar secretos.
+
+Entramos al directorio del componente ansible:
+
+```
+$ cd ansible
+```
 
 Ahora debes copiar tu llave publica a los nodos a administrar:
 
@@ -95,9 +104,8 @@ Listo ya tienes ansible funcionando.
 Antes de ejecutar el playbook debemos validar que la sintaxis está correcta:
 
 ```
-$ cd ansible
-$ ansible-playbook --syntax-check deploy-master.yml
-$ ansible-playbook --syntax-check deploy-workers.yml
+$ ansible-playbook --syntax-check deploy-k3s-master.yml
+$ ansible-playbook --syntax-check deploy-k3s-workers.yml
 ```
 
 En caso de que no aparezca ningún error.
@@ -109,8 +117,7 @@ En caso de que no aparezca ningún error.
 Para desplegar k3s en el nodo maestro ejecutamos:
 
 ```
-$ cd ansible
-$ ansible-playbook deploy-master.yml --tags k3s_install
+$ ansible-playbook deploy-k3s-master.yml
 ```
 
 **Workers:**
@@ -118,8 +125,7 @@ $ ansible-playbook deploy-master.yml --tags k3s_install
 Para desplegar k3s en los nodos workers ejecutamos:
 
 ```
-$ cd ansible
-$ ansible-playbook deploy-workers.yml --tags k3s_install
+$ ansible-playbook deploy-k3s-workers.yml
 ```
 
 ## Verificando el cluster
@@ -136,25 +142,37 @@ Verificando la información los nodos del cluster:
 $ kubectl get nodes -o wide
 ```
 
+## Recomendaciones seguridad
+
+Se deben seguir las siguientes recomendaciones:
+
+- Las secretos como llaves y credenciales se generan y almacenar en una herramienta de gestión de contraseñas.
+- Los secretos entre personas se comparten solo a través medios y transmisiones cifradas.
+- Los secretos necesarios para construir el proyecto se implementan como secretos a través de a herramienta de CI/CD.
+- Los secretos necesarios para desplegar los servicios se implementan como secretos de ansible vault.
+- Los secretos necesarios para ejecutar las aplicaciones se implementan como secretos de kubernetes.
+
+No está de más decir, que nunca se debe hacer commit de datos sensibles hardcodeados, se rechazara cualquier PR
+que no siga estas reglas, y se recomendara volver a leer las recomendaciones de arriba.
+
 ## Desinstalando k3s
 
-**Master:**
-
-Para desinstalar k3s en el nodo maestro ejecutamos:
+Para desinstalar k3s en el nodo maestro y workers ejecutamos:
 
 ```
 $ cd ansible
-$ ansible-playbook deploy-master.yml --tags k3s_uninstall
+$ ansible-playbook uninstall-k3s.yml
 ```
 
-**Workers:**
+## Workflow
 
-Para desinstalar k3s en los nodos workers ejecutamos:
+Usamos los Workflows de Github Actions para automatizar las tareas para construir la infraestructura usando
+ansible. En el directorio .github/workflows se encuentran los archivos .yml para cada flujo.
 
-```
-$ cd ansible
-$ ansible-playbook deploy-workers.yml --tags k3s_uninstall
-```
+## Recomendaciones
+
+Siempre recuerda hacer la validación previa y revisión de formato en los archivos de ansible. Se recomienda
+usar los git hooks como pre-commit para validar los archivos ansible y aplicarles el format.
 
 ## Referencias
 

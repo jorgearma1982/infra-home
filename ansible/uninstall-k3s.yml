@@ -1,0 +1,14 @@
+---
+- hosts: master
+  become: true
+  tasks:
+    - name: Desinstalar servidor k3s
+      shell: /usr/local/bin/k3s-uninstall.sh
+      ignore_errors: true
+
+- hosts: workers
+  become: true
+  tasks:
+    - name: Desinstalar agentes k3s
+      shell: /usr/local/bin/k3s-agent-uninstall.sh
+      ignore_errors: true
