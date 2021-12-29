@@ -1,0 +1,27 @@
+---
+# tasks file for k3s-agent
+
+- name: Limpiar reglas de firewall iptables
+  shell: iptables -F
+  tags:
+    - k3s_install
+
+- name: Configurar iptables legacy
+  shell: update-alternatives --set iptables /usr/sbin/iptables-legacy
+  tags:
+    - k3s_install
+
+- name: Configurar iptables6 legacy
+  shell: update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+  tags:
+    - k3s_install
+
+- name: Instalar agente k3s
+  shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
+  tags:
+    - k3s_install
+
+- name: Desinstalar agente k3s
+  shell: /usr/local/bin/k3s-agent-uninstall.sh
+  tags:
+    - k3s_uninstall
