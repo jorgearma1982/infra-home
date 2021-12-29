@@ -1,0 +1,7 @@
+# ignore log files
+*.log
+# ignore keys
+*.rsa
+*.rsa.pub
+# ignore hosts
+hosts
