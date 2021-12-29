@@ -20,13 +20,13 @@ instancia de AWS `a1.4xlarge` con 32GiB.
 Necesitamos cuatro máquinas, una desde donde usaremos ansible, diremos que es el nodo controlador, y las otras
 máquinas serán la que controlaremos. Los nodos serán llamados así:
 
-* localdev: maquina del desarrollador, ansible nodo controlador
-* k3s-master: maquina cluster kubernetes, ansible nodo controlado
-* k3s-worker1: maquina cluster kubernetes, ansible nodo controlado
-* k3s-worker2: maquina cluster kubernetes, ansible nodo controlado
+* `localdev`: maquina del desarrollador, ansible nodo controlador
+* `k3s-master`: maquina cluster kubernetes, ansible nodo controlado
+* `k3s-worker1`: maquina cluster kubernetes, ansible nodo controlado
+* `k3s-worker2`: maquina cluster kubernetes, ansible nodo controlado
 
 Los maquinas del cluster `k3s` ya deben tener instalado el sistema operativo Raspberry Pi OS 10 (buster), debe tener
-configurada la interfaz WIFI conectada solo para administración (sin servidores dns ni gateway), la interfaz ethernet
+configurada la interfaz WIFI conectada solo para administración (sin servidores dns ni gateway), la interfaz Ethernet
 debe estar configurada con dirección IP estática, con dns y gateway. El servicio SSH debe estar configurado para
 permitir las conexiones remotas. Se debe generar una contraseña para el usuario local `pi` para evitar usar la
 contraseña predeterminada.
