@@ -1,7 +1,7 @@
 ---
 # tasks file for k3s-server
 
-- name: Limpiar reglas iptables
+- name: Limpiar reglas firewall iptables
   iptables:
     flush: yes
   register: flushed
