@@ -1,0 +1,7 @@
+---
+# defaults file for nfs-client
+nfs_server: "nfs-server"
+nfs_share_backup: "/mnt/backup"
+nfs_path_backup: "/data/backup"
+nfs_share_media: "/mnt/media"
+nfs_path_media: "/data/media"

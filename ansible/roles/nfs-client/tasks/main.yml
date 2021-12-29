@@ -1,0 +1,42 @@
+---
+# tasks file for nfs-client
+- name: Instalar el cliente NFS
+  apt:
+    name:
+      - nfs-common
+
+- name: Crear directorio para recurso NFS backup
+  file:
+    path: "{{ nfs_share_backup }}"
+    owner: root
+    group: root
+    state: directory
+    mode: 0777
+
+- name: Configurar automontaje de recurso NFS backup
+  mount:
+    name: "{{ nfs_share_backup }}"
+    src: "{{ nfs_server }}:{{ nfs_path_backup }}"
+    fstype: nfs
+    opts: "rw"
+    dump: "0"
+    passno: "0"
+    state: mounted
+
+- name: Crear directorio para recurso NFS media
+  file:
+    path: "{{ nfs_share_media }}"
+    owner: root
+    group: root
+    state: directory
+    mode: 0777
+
+- name: Configurar automontaje de recurso NFS media
+  mount:
+    name: "{{ nfs_share_media }}"
+    src: "{{ nfs_server }}:{{ nfs_path_media }}"
+    fstype: nfs
+    opts: "rw"
+    dump: "0"
+    passno: "0"
+    state: mounted
