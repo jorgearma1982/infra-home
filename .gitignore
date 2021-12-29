@@ -5,3 +5,6 @@
 *.rsa.pub
 # ignore hosts
 hosts
+# ignore vim swap
+*.swp
+*.swo
