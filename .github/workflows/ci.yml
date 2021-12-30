@@ -14,6 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Check master playbook
-      run: cd ansible; ansible-playbook --syntax-check deploy-master.yml
+      run: cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
     - name: Check workers playbook
-      run: cd ansible; ansible-playbook --syntax-check deploy-workers.yml
+      run: cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
