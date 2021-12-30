@@ -120,7 +120,25 @@ Para desplegar k3s en el nodo maestro ejecutamos:
 $ ansible-playbook deploy-k3s-master.yml
 ```
 
+Ahora nos conectamos al nodo `k3s-master` y obtenemos el token:
+
+```
+$ sudo cat /var/lib/rancher/k3s/server/node-token
+```
+
 **Workers:**
+
+Editamos el inventario y agregamos las variables personalizadas para registrar los workers con el nodo maestro:
+
+```
+$ vim inventory/hosts
+...
+...
+...
+# k3s-server
+k3s_server_url="k3s-master:6443"
+k3s_server_token="Kstringsototototototototototote::server:secretotototote"
+```
 
 Para desplegar k3s en los nodos workers ejecutamos:
 
