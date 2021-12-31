@@ -21,3 +21,12 @@
       apt:
         autoclean: "yes"
         autoremove: "yes"
+
+# Deploy k3s-master
+- hosts: master
+  become: true
+  tasks:
+    - name: Etiquetar nodos k3s-worker1 como workers
+      shell: kubectl label node k3s-worker1 node-role.kubernetes.io/worker=''
+    - name: Etiquetar nodos k3s-worker2 como workers
+      shell: kubectl label node k3s-worker2 node-role.kubernetes.io/worker=''
