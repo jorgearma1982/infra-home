@@ -3,25 +3,16 @@
 
 - name: Configura el servidor NTP en timesyncd
   lineinfile:
-    path:    /etc/systemd/timesyncd.conf
-    line:    'NTP={{ ntp_server }}'
-    create:   yes
-    state:    present
-  register: timesyncd_conf
+    path: /etc/systemd/timesyncd.conf
+    line: 'NTP={{ ntp_server }}'
+    create: true
+    mode: 0644
+    state: present
+    notify:
+      - restart systemd-timesyncd
 
-- name: Iniciar systemd-timesyncd
+- name: Iniciar y habilitar servicio systemd-timesyncd
   service:
     name: systemd-timesyncd
     state: started
-  register: timesyncd_started
-
-- name: Reiniciar systemd-timesyncd si cambia la configuracion
-  service:
-    name: systemd-timesyncd
-    state: restarted
-  when: timesyncd_started.changed == False and timesyncd_conf.changed
-
-- name: Habilitar el serviio systemd-timesyncd
-  service:
-    name: systemd-timesyncd
-    enabled: yes
+    enabled: true
