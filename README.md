@@ -1,9 +1,11 @@
 # ansible-k3s
 
+[![CI](https://github.com/jorgearma1982/infra-home/actions/workflows/ci.yml/badge.svg)](https://github.com/jorgearma1982/infra-home/actions/workflows/ci.yml)
+
 ## Introducción
 
-En este repositorio tenemos los playbooks de ansible para automatizar la instalación y configuración de un
-cluster de Kubernetes usando `k3s` sobre `Raspberry Pi OS` (buster 10).
+En este repositorio mantenemos bajo control de versiones los playbooks de ansible y otras herramientas para
+automatizar el despliegue de un cluster Kubernetes usando `k3s` sobre maquinas `Raspberry Pi OS` (buster 10).
 
 `k3s` es una distribución de kubernetes certificada, nos permite construir un cluster altamente disponible. Está
 diseñado para cargas de trabajo Edge productivas, desatendidas, con recursos limitados, y en locaciones lejanas
