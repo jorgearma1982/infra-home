@@ -40,20 +40,26 @@ las siguientes instrucciones:
 
 ```
 $ sudo apt install python3
-$ pip3 install ansible
+$ pip3 install ansible yamllint pre-commit
 ```
 
 **MacOS:**
 
 ```
 $ brew install python3
-$ pip3 install ansible
+$ pip3 install ansible yamllint pre-commit
 ```
 
 Verifica que ansible está instalado:
 
 ```
 $ ansible --version
+```
+
+Instala hooks pre commit:
+
+```
+$ pre-commit install
 ```
 
 Ahora debes generar tus llaves RSA usando el script:
