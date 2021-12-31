@@ -2,12 +2,11 @@
 # Deploy k3s-workers
 - hosts: workers
   become: true
-
   pre_tasks:
-  - name: Actualizar paquetes del sistema
-    apt:
-      update_cache: "yes"
-      upgrade: "yes"
+    - name: Actualizar paquetes del sistema
+      apt:
+        update_cache: "yes"
+        upgrade: "yes"
 
   roles:
     - general-settings
@@ -18,7 +17,7 @@
     - k3s-agent
 
   post_tasks:
-  - name: Limpiar paquetes del cache
-    apt:
-      autoclean: "yes"
-      autoremove: "yes"
+    - name: Limpiar paquetes del cache
+      apt:
+        autoclean: "yes"
+        autoremove: "yes"

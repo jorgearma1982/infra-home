@@ -2,13 +2,11 @@
 # Deploy k3s-master
 - hosts: master
   become: true
-
   pre_tasks:
-  - name: Actualizar paquetes del sistema
-    apt:
-      update_cache: "yes"
-      upgrade: "yes"
-
+    - name: Actualizar paquetes del sistema
+      apt:
+        update_cache: "yes"
+        upgrade: "yes"
   roles:
     - general-settings
     - ntp-client
@@ -16,9 +14,8 @@
     - cgroups
     - nfs-client
     - k3s-server
-
   post_tasks:
-  - name: Limpiar paquetes del cache
-    apt:
-      autoclean: "yes"
-      autoremove: "yes"
+    - name: Limpiar paquetes del cache
+      apt:
+        autoclean: "yes"
+        autoremove: "yes"
