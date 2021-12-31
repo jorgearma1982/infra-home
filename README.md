@@ -33,6 +33,13 @@ debe estar configurada con dirección IP estática, con dns y gateway. El servic
 permitir las conexiones remotas. Se debe generar una contraseña para el usuario local `pi` para evitar usar la
 contraseña predeterminada.
 
+Las maquinas del cluster deben ser capaces de comunicarse entre si mismas por medio de nombres DNS, por lo tanto
+todas las maquinas deben usar servidores DNS comunes que tengan hospedada una zona autoritativa con los registros
+de los nombres de las maquinas y sus respectivas direcciones IP, de preferencia también poner resolución reversa.
+
+**IMPORTANTE:** En caso de no tener un servicio DNS se tendrá que poner el mapa de direcciones y nombres local en
+cada maquina usando el archivo `/etc/hosts`.
+
 ## Instalación y configuración
 
 Debes instalar ansible localmente en la maquina nodo controlador, puede ser en Linux o MacOS siguiendo
@@ -199,6 +206,12 @@ ansible. En el directorio .github/workflows se encuentran los archivos .yml para
 
 Siempre recuerda hacer la validación previa y revisión de formato en los archivos de ansible. Se recomienda
 usar los git hooks como pre-commit para validar los archivos ansible y aplicarles el format.
+
+Para correr manualmente `pre-commit` con todos los hooks definidos ejecutar:
+
+```
+$ pre-commit run --all-files
+```
 
 ## Referencias
 
