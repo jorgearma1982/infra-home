@@ -18,11 +18,9 @@ jobs:
       with:
         format: parsable
         strict: true
-    - name: Lint ansible files
-      uses: ansible/ansible-lint-action@master
-      with:
-        targets: "ansible"
-    - name: Syntax check master playbook
-      run: cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
-    - name: Syntax heck workers playbook
-      run: cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
+    - name: Syntax check & Lint ansible files
+      run: |
+        cd ansible; ansible-lint deploy-k3s-master.yml
+        cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
+        cd ansible; ansible-lint deploy-k3s-workers.yml
+        cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
