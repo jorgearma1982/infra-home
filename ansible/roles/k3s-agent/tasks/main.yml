@@ -2,14 +2,22 @@
 # tasks file for k3s-agent
 
 - name: Desactivar memoria swap
-  shell: dphys-swapfile swapoff
+  command: dphys-swapfile swapoff
+  register: swapoffoutput
+  changed_when: swapoffoutput.rc != 0
+  failed_when: swapoffoutput.rc != 0
 
 - name: Eliminar archivo swapfile
-  shell: dphys-swapfile uninstall
+  command: dphys-swapfile uninstall
+  register: swapfileuninsoutput
+  changed_when: swapfileuninsoutput.rc != 0
+  failed_when: swapfileuninsoutput.rc != 0
 
 - name: Capturar estado de memoria swap
-  shell: free -m
-  register: free
+  command: free -m
+  register: freeoutput
+  changed_when: freeoutput.rc != 0
+  failed_when: freeoutput.rc != 0
 
 - name: Mostrar estado de memoria swap
   debug: var=free.stdout_lines
@@ -23,19 +31,19 @@
 - name: Limpiar reglas de firewall iptables
   iptables:
     flush: yes
-  register: flushed
 
 - name: Configurar alternativa de iptables a iptables-legacy
   alternatives:
     name: iptables
     path: /usr/sbin/iptables-legacy
-  when: flushed.changed
 
 - name: Configurar alternativa de ip6tables a ip6tables-legacy
   alternatives:
     name: ip6tables
     path: /usr/sbin/ip6tables-legacy
-  when: flushed.changed
 
 - name: Instalar agente k3s
-  shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
+  command: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
+  register: agentinsoutput
+  changed_when: agentinsoutput.rc != 0
+  failed_when: agentinsoutput.rc != 0
