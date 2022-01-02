@@ -13,6 +13,11 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
+    - name: Yamllint
+      uses: karancode/yamllint-github-action@master
+      with:
+        yamllint_strict: true
+        yamllint_comment: false
     - name: Check master playbook
       run: cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
     - name: Check workers playbook
