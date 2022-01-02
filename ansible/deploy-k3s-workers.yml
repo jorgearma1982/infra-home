@@ -1,5 +1,5 @@
 ---
-# Deploy k3s-workers
+# Deploy in workers
 - hosts: workers
   become: true
   pre_tasks:
@@ -22,11 +22,17 @@
         autoclean: "yes"
         autoremove: "yes"
 
-# Deploy k3s-master
+# Deploy in master
 - hosts: master
   become: true
   tasks:
     - name: Etiquetar nodos k3s-worker1 como workers
-      shell: kubectl label node k3s-worker1 node-role.kubernetes.io/worker=''
+      command: kubectl label node k3s-worker1 node-role.kubernetes.io/worker=''
+      register: labelw1output
+      changed_when: labelw1output.rc != 0
+      failed_when: labelw1output.rc != 0
     - name: Etiquetar nodos k3s-worker2 como workers
-      shell: kubectl label node k3s-worker2 node-role.kubernetes.io/worker=''
+      command: kubectl label node k3s-worker2 node-role.kubernetes.io/worker=''
+      register: labelw2output
+      changed_when: labelw2output.rc != 0
+      failed_when: labelw2output.rc != 0
