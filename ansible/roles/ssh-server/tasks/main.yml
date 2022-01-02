@@ -6,7 +6,7 @@
     name:
       - openssh-server
       - openssh-client
-    state: latest
+    state: present
 
 - name: Asegurar configuracion de servicio ssh
   blockinfile:
@@ -17,10 +17,5 @@
       MaxAuthTries 3
       MaxSessions 5
       PasswordAuthentication no
-  register: sshd
-
-- name: Reiniciar servicio ssh
-  service:
-    name: sshd
-    state: restarted
-  when: sshd.changed == true
+  notify:
+    restart ssh
