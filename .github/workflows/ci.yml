@@ -24,3 +24,6 @@ jobs:
     - name: Syntax check ansible workers playbooks
       run: |
         cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
+    - name: Lint check ansible master playbook
+      run: |
+        cd ansible; ansible-lint deploy-k3s-master.yml
