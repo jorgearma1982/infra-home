@@ -27,3 +27,6 @@ jobs:
     - name: Lint check ansible master playbook
       run: |
         ansible-lint ansible/deploy-k3s-master.yml
+    - name: Lint check ansible workers playbook
+      run: |
+        ansible-lint ansible/deploy-k3s-workers.yml
