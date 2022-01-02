@@ -18,7 +18,9 @@ jobs:
       with:
         format: parsable
         strict: true
-    - name: Syntax check ansible playbooks
+    - name: Syntax check ansible master playbook
       run: |
         cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
+    - name: Syntax check ansible workers playbooks
+      run: |
         cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
