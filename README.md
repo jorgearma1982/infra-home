@@ -175,6 +175,34 @@ Verificando la información los nodos del cluster:
 $ kubectl get nodes -o wide
 ```
 
+## Desplegando Metallb
+
+Instalamos metallb:
+
+```
+$ helm
+```
+
+Verificando la instalación:
+
+```
+$ helm
+```
+
+## Desplegando Ingress Nginx
+
+Instalamos Igress nginx:
+
+```
+$ helm
+```
+
+Verificando la instalación:
+
+```
+$ helm
+```
+
 ## Recomendaciones seguridad
 
 Se deben seguir las siguientes recomendaciones:
