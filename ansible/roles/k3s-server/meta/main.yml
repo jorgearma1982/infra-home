@@ -1,14 +1,15 @@
 ---
 galaxy_info:
+  role_name: k3s_server
   author: Jorge Medina
   description: Install k3s server on linux server
   company: KronOps
   license: MIT
   min_ansible_version: 2.9
   platforms:
-  - name: Ubuntu
-    versions:
-    - focal
-  categories:
-  - virtualization
+    - name: Ubuntu
+      versions:
+        - focal
+  galaxy_tags:
+    - virtualization
 dependencies: []
