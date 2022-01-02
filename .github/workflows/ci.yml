@@ -26,4 +26,4 @@ jobs:
         cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
     - name: Lint check ansible master playbook
       run: |
-        ansible-lint deploy-k3s-master.yml
+        ansible-lint ansible/deploy-k3s-master.yml
