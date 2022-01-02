@@ -14,10 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Yamllint
-      uses: karancode/yamllint-github-action@master
+    - uses: ibiqlik/action-yamllint@v3
       with:
-        yamllint_strict: true
-        yamllint_comment: false
+        format: parsable
+        strict: true
     - name: Check master playbook
       run: cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
     - name: Check workers playbook
