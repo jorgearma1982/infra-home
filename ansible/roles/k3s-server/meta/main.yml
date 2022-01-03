@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  role_name: ssh_server
-  author: Jorge Armando Medina
-  description: Tasks for setting up local ssh service
+  role_name: k3s_server
+  author: Jorge Medina
+  description: Install k3s server on linux server
   company: KronOps
   license: MIT
   min_ansible_version: 2.9
@@ -11,5 +11,5 @@ galaxy_info:
       versions:
         - focal
   galaxy_tags:
-    - networking
+    - virtualization
 dependencies: []

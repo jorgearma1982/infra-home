@@ -1,0 +1,9 @@
+parseable: true
+quiet: false
+skip_list:
+  # Using command rather module we have where
+  # we need to use curl.
+  - command-instead-of-module
+  # shell tasks uses pipeline without pipefail,
+  # this requires refactoring, skip for now.
+  - risky-shell-pipe

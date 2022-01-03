@@ -1,14 +1,15 @@
 ---
 galaxy_info:
+  role_name: nfs_client
   author: Jorge Medina
   description: Install nfs client on server
   company: KronOps
   license: MIT
   min_ansible_version: 2.9
   platforms:
-  - name: Ubuntu
-    versions:
-    - focal
-  categories:
-  - virtualization
+    - name: Ubuntu
+      versions:
+        - focal
+  galaxy-tags:
+    - virtualization
 dependencies: []

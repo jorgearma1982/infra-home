@@ -1,0 +1,3 @@
+---
+# defaults file for k3s-server
+k3s_channel: "stable"

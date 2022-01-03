@@ -1,2 +1,6 @@
 ---
 # handlers file for ntp-client
+- name: restart systemd-timesyncd
+  service:
+    name: systemd-timesyncd
+    state: restarted

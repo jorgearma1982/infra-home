@@ -12,8 +12,24 @@ jobs:
     name: Build and test
     runs-on: self-hosted
     steps:
+    - name: Install dependencies
+      run: |
+        pip3 install ansible ansible-lint
     - uses: actions/checkout@v2
-    - name: Check master playbook
-      run: cd ansible; ansible-playbook --syntax-check deploy-master.yml
-    - name: Check workers playbook
-      run: cd ansible; ansible-playbook --syntax-check deploy-workers.yml
+    - name: Lint check yaml files
+      uses: ibiqlik/action-yamllint@v3
+      with:
+        format: parsable
+        strict: true
+    - name: Syntax check ansible master playbook
+      run: |
+        cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
+    - name: Syntax check ansible workers playbooks
+      run: |
+        cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
+    - name: Lint check ansible master playbook
+      run: |
+        ansible-lint ansible/deploy-k3s-master.yml
+    - name: Lint check ansible workers playbook
+      run: |
+        ansible-lint ansible/deploy-k3s-workers.yml
