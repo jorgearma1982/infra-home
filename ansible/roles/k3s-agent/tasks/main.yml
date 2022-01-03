@@ -43,7 +43,7 @@
     path: /usr/sbin/ip6tables-legacy
 
 - name: Instalar agente k3s
-  shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
+  shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN_FILE={{ k3s_server_token }} sh -
   changed_when: false
 
 - name: Esperar 30 secs mientras los agentes inicializan

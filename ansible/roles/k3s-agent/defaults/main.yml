@@ -1,4 +1,4 @@
 ---
 # defaults file for k3s-agent
 k3s_server_url: "k3s-master:6443"
-k3s_server_token: "random"
+k3s_server_token: "/tmp/k3s-master-node-token"
