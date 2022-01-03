@@ -46,9 +46,11 @@
   shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 644 --disable traefik --disable servicelb
   changed_when: false
 
-- name: Get server token
-  command: cat /var/lib/rancher/k3s/server/node-token
-  changed_when: false
+- name: Esperar 30 secs mientras el servidor inicializa
+  command: sleep 30
+  register: sleepoutput
+  changed_when: sleepoutput.rc != 0
+  failed_when: sleepoutput.rc != 0
 
 - name: Taint nodo maestro para no schedule
   command: kubectl taint --overwrite node k3s-master node-role.kubernetes.io/master=true:NoSchedule
