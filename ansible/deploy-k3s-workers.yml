@@ -6,7 +6,7 @@
     - name: Obtener token de nodo maestro
       fetch:
         src: /var/lib/rancher/k3s/server/node-token
-        dest: k3s-master-node-token
+        dest: /tmp/k3s-master-node-token
         flat: true
 
 # Deploy in workers
@@ -20,7 +20,7 @@
 
     - name: Copiar archivo de token de nodo maestro a workers
       copy:
-        src: k3s-master-node-token
+        src: /tmp/k3s-master-node-token
         dest: /tmp/k3s-master-node-token
         owner: pi
         group: pi
@@ -59,13 +59,3 @@
       register: labelw2output
       changed_when: labelw2output.rc != 0
       failed_when: labelw2output.rc != 0
-
-# Deploy in localdev
-- hosts: localhost
-  connection: local
-  become: true
-  tasks:
-    - name: Limpiar archivo de token de nodo maestro en workers
-      file:
-        path: k3s-master-node-token
-        state: absent
