@@ -43,10 +43,8 @@
     path: /usr/sbin/ip6tables-legacy
 
 - name: Instalar servidor k3s
-  command: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 644 --disable traefik --disable servicelb
-  register: serverinsoutput
-  changed_when: serverinsoutput.rc != 0
-  failed_when: serverinsoutput.rc != 0
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 644 --disable traefik --disable servicelb
+  changed_when: false
 
 - name: Get server token
   command: cat /var/lib/rancher/k3s/server/node-token

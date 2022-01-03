@@ -12,7 +12,7 @@
     - ntp-client
     - ssh-server
     - cgroups
-    - nfs-client
+#    - nfs-client
     - k3s-server
   post_tasks:
     - name: Limpiar paquetes del cache

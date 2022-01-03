@@ -13,7 +13,7 @@
     - ntp-client
     - ssh-server
     - cgroups
-    - nfs-client
+#    - nfs-client
     - k3s-agent
 
   post_tasks:
