@@ -49,20 +49,26 @@ las siguientes instrucciones:
 
 ```
 $ sudo apt install python3
-$ pip3 install ansible yamllint pre-commit
+$ pip3 install ansible yamllint ansible-lint pre-commit
 ```
 
 **MacOS:**
 
 ```
 $ brew install python3
-$ pip3 install ansible yamllint pre-commit
+$ pip3 install ansible yamllint ansible-lint pre-commit
 ```
 
 Verifica que ansible está instalado:
 
 ```
 $ ansible --version
+```
+
+Verifica que ansible-lint está instalado:
+
+```
+$ ansible-lint --version
 ```
 
 Instala hooks pre commit:
@@ -241,7 +247,8 @@ ansible. En el directorio .github/workflows se encuentran los archivos .yml para
 
 ## Recomendaciones
 
-Siempre recuerda hacer la validación previa y revisión de formato en los archivos de ansible. Se recomienda
+Siempre recuerda hacer la validación previa y revisión de formato en los archivos de ansible usando `yamllint` para
+validar la sintaxis de los archivos `.yaml|.yml` y `ansible-lint` para validar las mejores prácticas. Se recomienda
 usar los git hooks como pre-commit para validar los archivos ansible y aplicarles el format.
 
 Para correr manualmente `pre-commit` con todos los hooks definidos ejecutar:
