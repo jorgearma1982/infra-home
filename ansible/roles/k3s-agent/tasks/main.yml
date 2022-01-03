@@ -45,3 +45,9 @@
 - name: Instalar agente k3s
   shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
   changed_when: false
+
+- name: Sleep while agents start up
+  command: sleep 30
+  register: sleepoutput
+  changed_when: sleepoutput.rc != 0
+  failed_when: sleepoutput.rc != 0
