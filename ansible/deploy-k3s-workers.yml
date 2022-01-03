@@ -1,4 +1,14 @@
 ---
+# Deploy in master
+- hosts: master
+  become: true
+  tasks:
+    - name: Obtener token de nodo maestro
+      fetch:
+        src: /var/lib/rancher/k3s/server/node-token
+        dest: k3s-master-node-token
+        flat: yes
+
 # Deploy in workers
 - hosts: workers
   become: true
@@ -7,6 +17,14 @@
       apt:
         update_cache: "yes"
         upgrade: "yes"
+
+    - name: Copiar archivo de token de nodo maestro a workers
+      copy:
+          src: k3s-master-node-token
+          dest: /tmp/k3s-master-node-token
+          owner: pi
+          group: pi
+          mode: 0600
 
   roles:
     - general-settings
@@ -21,6 +39,11 @@
       apt:
         autoclean: "yes"
         autoremove: "yes"
+
+    - name: Limpiar archivo de token de nodo maestro en workers
+      file:
+          path: /tmp/k3s-master-node-token
+          state: absent
 
 # Deploy in master
 - hosts: master
