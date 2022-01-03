@@ -43,7 +43,5 @@
     path: /usr/sbin/ip6tables-legacy
 
 - name: Instalar agente k3s
-  command: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
-  register: agentinsoutput
-  changed_when: agentinsoutput.rc != 0
-  failed_when: agentinsoutput.rc != 0
+  shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN={{ k3s_server_token }} sh -
+  changed_when: false
