@@ -149,6 +149,14 @@ Para desplegar k3s en los nodos workers ejecutamos:
 $ ansible-playbook deploy-k3s-workers.yml
 ```
 
+**Localdev:**
+
+Limpiamos archivo de token de servidor maestro:
+
+```
+$ rm /tmp/k3s-master-node-token
+```
+
 ## Verificando el cluster
 
 Verificando la información de la API del cluster:
