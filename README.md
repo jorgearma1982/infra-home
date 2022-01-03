@@ -167,12 +167,21 @@ Verificando la información de la API del cluster:
 
 ```
 $ kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 Verificando la información los nodos del cluster:
 
 ```
 $ kubectl get nodes -o wide
+NAME          STATUS   ROLES                  AGE     VERSION        INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+k3s-worker1   Ready    worker                 4m54s   v1.22.5+k3s1   192.168.114.16   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7l+     containerd://1.5.8-k3s1
+k3s-worker2   Ready    worker                 3m54s   v1.22.5+k3s1   192.168.114.17   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7l+     containerd://1.5.8-k3s1
+k3s-master    Ready    control-plane,master   30m     v1.22.5+k3s1   192.168.114.15   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7+      containerd://1.5.8-k3s1
 ```
 
 ## Desplegando Metallb
