@@ -26,11 +26,11 @@
   service:
     name: dphys-swapfile.service
     state: stopped
-    enabled: no
+    enabled: false
 
 - name: Limpiar reglas de firewall iptables
   iptables:
-    flush: yes
+    flush: true
 
 - name: Configurar alternativa de iptables a iptables-legacy
   alternatives:
