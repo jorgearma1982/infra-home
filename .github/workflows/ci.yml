@@ -12,6 +12,9 @@ jobs:
     name: Build and test
     runs-on: self-hosted
     steps:
+    - name: Install dependencies
+      run: |
+        pip3 install ansible ansible-lint
     - uses: actions/checkout@v2
     - name: Lint check yaml files
       uses: ibiqlik/action-yamllint@v3
