@@ -7,7 +7,7 @@
       fetch:
         src: /var/lib/rancher/k3s/server/node-token
         dest: k3s-master-node-token
-        flat: yes
+        flat: true
 
 # Deploy in workers
 - hosts: workers
@@ -20,11 +20,11 @@
 
     - name: Copiar archivo de token de nodo maestro a workers
       copy:
-          src: k3s-master-node-token
-          dest: /tmp/k3s-master-node-token
-          owner: pi
-          group: pi
-          mode: 0600
+        src: k3s-master-node-token
+        dest: /tmp/k3s-master-node-token
+        owner: pi
+        group: pi
+        mode: 0600
 
   roles:
     - general-settings
@@ -42,8 +42,8 @@
 
     - name: Limpiar archivo de token de nodo maestro en workers
       file:
-          path: /tmp/k3s-master-node-token
-          state: absent
+        path: /tmp/k3s-master-node-token
+        state: absent
 
 # Deploy in master
 - hosts: master
