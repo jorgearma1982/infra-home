@@ -200,7 +200,7 @@ implementar caché para acelerar el acceso a objetos estáticos, listas blancas 
 provee Nginx.
 
 ```
-$ ansible-playbook deploy-helm-services.yml
+$ ansible-playbook deploy-k3s-helm.yml
 ```
 
 ## Recomendaciones seguridad
