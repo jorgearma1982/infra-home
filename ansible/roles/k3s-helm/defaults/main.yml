@@ -1,2 +1,17 @@
 ---
 # defaults file for k3s-helm
+
+# kubectl settings
+kubectl_local_user: "pi"
+kubectl_local_group: "pi"
+# metallb settings
+metallb_address_pools_0_name: "default"
+metallb_address_pools_0_protocol: "layer2"
+metallb_address_pools_0_addresses_0: "10.101.114.240-10.101.114.249"
+# ingress-nginx settings
+ingress_nginx_ingress_class: "nginx"
+ingress_nginx_publish_service_enabled: "true"
+ingress_nginx_replica_count: "2"
+ingress_nginx_min_available: "1"
+ingress_nginx_default_backend_enabled: "false"
+ingress_nginx_external_traffic_policy: "Local"
