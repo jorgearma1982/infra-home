@@ -17,7 +17,6 @@
       apt:
         update_cache: "yes"
         upgrade: "yes"
-
     - name: Copiar archivo de token de nodo maestro a workers
       copy:
         src: /tmp/k3s-master-node-token
@@ -25,21 +24,18 @@
         owner: pi
         group: pi
         mode: 0600
-
   roles:
     - general-settings
     - ntp-client
     - ssh-server
     - cgroups
-#    - nfs-client
+    - nfs-client
     - k3s-agent
-
   post_tasks:
     - name: Limpiar paquetes del cache
       apt:
         autoclean: "yes"
         autoremove: "yes"
-
     - name: Limpiar archivo de token de nodo maestro en workers
       file:
         path: /tmp/k3s-master-node-token

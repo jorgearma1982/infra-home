@@ -7,3 +7,5 @@ skip_list:
   # shell tasks uses pipeline without pipefail,
   # this requires refactoring, skip for now.
   - risky-shell-pipe
+  # Use shell only when shell functionality is required
+  - command-instead-of-shell

@@ -20,7 +20,7 @@
   failed_when: freeoutput.rc != 0
 
 - name: Mostrar estado de memoria swap
-  debug: var=free.stdout_lines
+  debug: var=freeoutput.stdout_lines
 
 - name: Desactivar el servicio dphys-swapfile
   service:

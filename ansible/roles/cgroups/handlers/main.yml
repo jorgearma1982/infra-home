@@ -1,8 +1,5 @@
 ---
 # handlers file for cgroups
 
-- name: Reiniciar el nodo par habilitar cgroup para cpu y memoria
+- name: restart server
   shell: nohup bash -c "/bin/sleep 5 && /sbin/shutdown -r now" &
-
-- name: Esperar a que el nodo reinicie
-  wait_for_connection: timeout=300 delay=30

@@ -27,9 +27,15 @@ jobs:
     - name: Syntax check ansible workers playbooks
       run: |
         cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
+    - name: Syntax check ansible helm playbooks
+      run: |
+        cd ansible; ansible-playbook --syntax-check deploy-k3s-helm.yml
     - name: Lint check ansible master playbook
       run: |
         ansible-lint ansible/deploy-k3s-master.yml
     - name: Lint check ansible workers playbook
       run: |
         ansible-lint ansible/deploy-k3s-workers.yml
+    - name: Lint check ansible helm playbook
+      run: |
+        ansible-lint ansible/deploy-k3s-helm.yml
