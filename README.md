@@ -17,6 +17,9 @@ y pasos para instalar, ejecutar y auto-actualizar un cluster de producción.
 Soporta arquitecturas `ARM64` y `ARMv7`, funciona muy bien desde algo tan pequeño como una Raspberry Pi hasta en una
 instancia de AWS `a1.4xlarge` con 32GB.
 
+Implementaremos `MetalLB` y `NGINX` Ingress controller para dar acceso seguro a usuarios externos a los servicios
+del cluster.
+
 ## Requisitos
 
 Necesitamos cuatro máquinas, una desde donde usaremos ansible, diremos que es el nodo controlador, y las otras
@@ -32,6 +35,9 @@ configurada la interfaz WIFI conectada solo para administración (sin servidores
 debe estar configurada con dirección IP estática, con dns y gateway. El servicio SSH debe estar configurado para
 permitir las conexiones remotas. Se debe generar una contraseña para el usuario local `pi` para evitar usar la
 contraseña predeterminada.
+
+Además de las direcciones IP privadas que usará cada servidor, necesitaremos un rango de direcciones IP privadas
+dedicadas para el balanceador de cargas, aquí usaremos un rango de 10 direcciones IP en una subred clase C.
 
 Las maquinas del cluster deben ser capaces de comunicarse entre si mismas por medio de nombres DNS, por lo tanto
 todas las maquinas deben usar servidores DNS comunes que tengan hospedada una zona autoritativa con los registros
@@ -177,7 +183,24 @@ $ sudo kubectl get nodes -o wide
 NAME          STATUS   ROLES                  AGE     VERSION        INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
 k3s-worker1   Ready    worker                 4m54s   v1.22.5+k3s1   192.168.114.16   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7l+     containerd://1.5.8-k3s1
 k3s-worker2   Ready    worker                 3m54s   v1.22.5+k3s1   192.168.114.17   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7l+     containerd://1.5.8-k3s1
-k3s-master    Ready    control-plane,master   30m     v1.22.5+k3s1   192.168.114.15   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7+      containerd://1.5.8-k3s1
+k3s-master    Ready    control-plane,master   30m     v1.22.5+k3s1   192.168.114.15   <none>        Raspbian GNU/Linux 10 (buster)   5.10.63-v7l+     containerd://1.5.8-k3s1
+```
+
+## Configurando servicios de red
+
+Para dar acceso a los servicios del cluster a usuarios externos, implementaremos un balanceador de cargas en nuestro
+cluster baremetal, usaremos MetalLB, el cual nos permite trabajar con protocolos de enrutamiento estandar.
+
+Configuraremos MetalLB en modo `Layer2` y le asignaremos un rango de direcciones IP privadas sobre las cuales
+balancearemos el tráfico externo hacia el cluster.
+
+Para gestionar la capa HTTP implementaremos un servicio controlador Ingress, este nos permite definir rutas de acceso
+a los servicios web dentro del cluster, podemos implementar seguridad TLS haciendo de terminador SSL o TLS, es posible
+implementar caché para acelerar el acceso a objetos estáticos, listas blancas y muchas otras funcionalidades que
+provee Nginx.
+
+```
+$ ansible-playbook deploy-helm-services.yml
 ```
 
 ## Recomendaciones seguridad
@@ -225,3 +248,5 @@ La siguiente es una lista de referencias externas que podemos consultar para apr
 
 * [k3s](https://k3s.io/)
 * [ansible](https://github.com/ansible/ansible)
+* [Metallb](https://metallb.universe.tf/)
+* [Ingress nginx]()
