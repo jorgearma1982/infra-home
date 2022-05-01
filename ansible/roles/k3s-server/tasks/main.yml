@@ -57,3 +57,4 @@
   register: taintoutput
   changed_when: taintoutput.rc != 0
   failed_when: taintoutput.rc != 0
+  when: k3s_master_noschedule|bool == True

@@ -1,3 +1,4 @@
 ---
 # defaults file for k3s-server
 k3s_channel: "stable"
+k3s_master_noschedule: "false"
