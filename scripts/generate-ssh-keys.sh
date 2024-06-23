@@ -3,7 +3,7 @@
 #
 # script: generate-ssh-keys.sh
 # author: Jorge Armando Medina
-# desc: Generate SSH RSA 4096 keys for ansible.
+# desc: Generate SSH ed25519 keys for ansible.
 
 # Bash debug mode
 set -x
@@ -12,11 +12,11 @@ set -x
 set -e
 
 # vars
-KEY_TYPE="rsa"
-KEY_SIZE="4096"
+KEY_TYPE="ed25519"
+KEY_ROUNDS="100"
 KEY_DESC="ansible@home"
 KEY_DIR="inventory/.ssh"
-KEY_FILE="id-ansiblex.rsa"
+KEY_FILE="id_ansible_ed25519"
 
 # main
 cd ansible
@@ -28,7 +28,7 @@ chmod 700 ${KEY_DIR}
 echo "Generating ${KEY_TYPE}/${KEY_SIZE} SSH keys for ansible user."
 ssh-keygen \
   -t ${KEY_TYPE} \
-  -b ${KEY_SIZE} \
+  -a ${KEY_ROUNDS} \
   -C "${KEY_DESC}" \
   -f ${KEY_DIR}/${KEY_FILE} \
   -q -N ""

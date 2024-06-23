@@ -1,3 +1,4 @@
+---
 name: CI
 
 on:
@@ -10,12 +11,12 @@ env:
 jobs:
   build-and-test:
     name: Build and test
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Install dependencies
       run: |
         pip3 install ansible ansible-lint
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Lint check yaml files
       uses: ibiqlik/action-yamllint@v3
       with:
