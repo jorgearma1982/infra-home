@@ -2,14 +2,14 @@
 # tasks file for ssh-server
 
 - name: Instalar el servicio openssh
-  apt:
+  ansible.builtin.apt:
     name:
       - openssh-server
       - openssh-client
     state: present
 
 - name: Asegurar configuracion de servicio ssh
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/ssh/sshd_config
     validate: /usr/sbin/sshd -T -f %s
     block: |
