@@ -3,3 +3,4 @@
 
 - name: Restart server
   ansible.builtin.shell: nohup bash -c "/bin/sleep 5 && /sbin/shutdown -r now" &
+  changed_when: false
