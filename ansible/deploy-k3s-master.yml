@@ -1,10 +1,10 @@
 ---
-- name: deploy | k3s-master
+- name: Deploy | k3s-master
   hosts: master
   become: true
   pre_tasks:
     - name: Actualizar paquetes del sistema
-      apt:
+      ansible.builtin.apt:
         update_cache: "yes"
         upgrade: "yes"
   roles:
@@ -16,6 +16,6 @@
     - k3s-server
   post_tasks:
     - name: Limpiar paquetes del cache
-      apt:
+      ansible.builtin.apt:
         autoclean: "yes"
         autoremove: "yes"
