@@ -2,7 +2,7 @@
 # tasks file for cgroups
 
 - name: Agregar soporte cgroups de cpu y memoria al kernel
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /boot/cmdline.txt
     backrefs: true
     regexp: '^(.*)rootwait$'
@@ -10,4 +10,4 @@
   notify: restart server
 
 - name: Esperar a que el nodo reinicie
-  wait_for_connection: timeout=300 delay=30
+  ansible.builtin.wait_for_connection: timeout=300 delay=30

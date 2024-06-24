@@ -2,7 +2,7 @@
 # tasks file for k3s-helm
 
 - name: Crear directorio configuración kubectl
-  file:
+  ansible.builtin.file:
     path: '/home/{{ kubectl_local_user }}/.kube'
     state: directory
     owner: '{{ kubectl_local_user }}'
@@ -10,7 +10,7 @@
     mode: 0700
 
 - name: Obtener archivo de configuración kubectl
-  copy:
+  ansible.builtin.copy:
     src: '/etc/rancher/k3s/k3s.yaml'
     dest: '/home/{{ kubectl_local_user }}/.kube/config'
     remote_src: true
@@ -19,7 +19,7 @@
     mode: 0600
 
 - name: Crea script para configuraciones kubectl
-  file:
+  ansible.builtin.file:
     path: '/etc/profile.d/kubeconfig.sh'
     owner: root
     group: root
@@ -27,60 +27,60 @@
     state: touch
 
 - name: Configura env KUBECONFIG
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/profile.d/kubeconfig.sh"
     state: present
     regexp: "^export KUBECONFIG="
     line: "export KUBECONFIG=/home/{{ kubectl_local_user }}/.kube/config"
 
 - name: Configura autocompletado para kubectl
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/profile.d/kubeconfig.sh"
     state: present
     regexp: "^source <(kubectl completion bash)"
     line: "source <(kubectl completion bash)"
 
 - name: Configura alias kubectl
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/profile.d/kubeconfig.sh"
     state: present
     regexp: '^alias k="kubectl"'
     line: 'alias k="kubectl"'
 
 - name: Configura autocompletado para alias kubectl
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/profile.d/kubeconfig.sh"
     state: present
     regexp: '^complete -F __start_kubectl k'
     line: 'complete -F __start_kubectl k'
 
 - name: Descargar instalador de helm
-  get_url:
+  ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
     dest: /tmp/get-helm.sh
     mode: 0700
 
 - name: Instalar helm
-  shell: /tmp/get-helm.sh
+  ansible.builtin.shell: /tmp/get-helm.sh
   changed_when: false
 
 - name: Limpiar instalador de helm
-  file:
+  ansible.builtin.file:
     path: /tmp/get-helm.sh
     state: absent
 
 - name: Agregar repositoro helm metallb
-  command: helm repo add metallb https://metallb.github.io/metallb
+  ansible.builtin.command: helm repo add metallb https://metallb.github.io/metallb
   changed_when: false
   become: false
 
 - name: Actualizar repositorios helm con metallb
-  command: helm repo update
+  ansible.builtin.command: helm repo update
   changed_when: false
   become: false
 
 - name: Instalar metallb
-  shell: |
+  ansible.builtin.shell: |
     helm ls -n kube-system | grep metallb || helm install metallb metallb/metallb \
       --namespace kube-system \
       --set configInline.address-pools[0].name={{ metallb_address_pools_0_name }} \
@@ -90,22 +90,22 @@
   become: false
 
 - name: Agregar repositoro helm ingress-nginx
-  command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
   changed_when: false
   become: false
 
 - name: Actualizar repositorios helm con ingress-nginx
-  command: helm repo update
+  ansible.builtin.command: helm repo update
   changed_when: false
   become: false
 
 - name: Agregar namespace ingress
-  shell: kubectl get ns ingress || kubectl create namespace ingress
+  ansible.builtin.shell: kubectl get ns ingress || kubectl create namespace ingress
   changed_when: false
   become: false
 
 - name: Instalar el controlador ingress-nginx
-  shell: |
+  ansible.builtin.shell: |
     helm ls -n ingress | grep ingress || helm install ingress ingress-nginx/ingress-nginx \
       --namespace ingress \
       --set controller.ingressClass={{ ingress_nginx_ingress_class }} \
