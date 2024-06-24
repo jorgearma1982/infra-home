@@ -20,7 +20,8 @@
   failed_when: freeoutput.rc != 0
 
 - name: Mostrar estado de memoria swap
-  ansible.builtin.debug: var=freeoutput.stdout_lines
+  ansible.builtin.debug:
+    var: freeoutput.stdout_lines
 
 - name: Desactivar el servicio dphys-swapfile
   ansible.builtin.service:

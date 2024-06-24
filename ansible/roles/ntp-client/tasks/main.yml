@@ -6,7 +6,7 @@
     path: /etc/systemd/timesyncd.conf
     line: 'NTP={{ ntp_server }}'
     create: true
-    mode: 0644
+    mode: "0644"
     state: present
   notify:
     - restart systemd-timesyncd

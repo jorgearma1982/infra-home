@@ -1,5 +1,5 @@
 ---
-- name: deploy | k3s-master
+- name: Deploy | k3s-master
   hosts: master
   become: true
   roles:

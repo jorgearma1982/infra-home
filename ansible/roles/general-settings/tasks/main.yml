@@ -2,14 +2,15 @@
 # tasks file for general-settings
 
 - name: Configurar el nombre de host a nivel kernel
-  ansible.builtin.hostname: name={{ hostname_name }}
+  ansible.builtin.hostname:
+    name: "{{ hostname_name }}"
 
 - name: Configurar el nombre de host persistente
   ansible.builtin.copy:
     content: "{{ hostname_name }}"
     dest: /etc/hostname
     force: true
-    mode: 0644
+    mode: "0644"
   when: hostname_name is defined
 
 - name: Configurar resolución de nombres local
@@ -18,7 +19,7 @@
     dest: /etc/hosts
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
     backup: true
 
 - name: Instalar paquete de zonas horarias

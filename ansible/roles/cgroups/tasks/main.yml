@@ -10,4 +10,6 @@
   notify: restart server
 
 - name: Esperar a que el nodo reinicie
-  ansible.builtin.wait_for_connection: timeout=300 delay=30
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+    delay: 30

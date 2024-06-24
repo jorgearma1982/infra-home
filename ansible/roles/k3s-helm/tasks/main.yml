@@ -7,7 +7,7 @@
     state: directory
     owner: '{{ kubectl_local_user }}'
     group: '{{ kubectl_local_group }}'
-    mode: 0700
+    mode: "0700"
 
 - name: Obtener archivo de configuración kubectl
   ansible.builtin.copy:
@@ -16,14 +16,14 @@
     remote_src: true
     owner: '{{ kubectl_local_user }}'
     group: '{{ kubectl_local_group }}'
-    mode: 0600
+    mode: "0600 "
 
 - name: Crea script para configuraciones kubectl
   ansible.builtin.file:
     path: '/etc/profile.d/kubeconfig.sh'
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
     state: touch
 
 - name: Configura env KUBECONFIG
@@ -58,7 +58,7 @@
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
     dest: /tmp/get-helm.sh
-    mode: 0700
+    mode: "0700"
 
 - name: Instalar helm
   ansible.builtin.shell: /tmp/get-helm.sh

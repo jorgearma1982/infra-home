@@ -1,5 +1,5 @@
 ---
-- name: deploy | master
+- name: Deploy | master
   hosts: master
   become: true
   tasks:
@@ -9,7 +9,7 @@
         dest: /tmp/k3s-master-node-token
         flat: true
 
-- name: deploy | workers
+- name: Deploy | workers
   hosts: workers
   become: true
   pre_tasks:
@@ -23,7 +23,7 @@
         dest: /tmp/k3s-master-node-token
         owner: pi
         group: pi
-        mode: 0600
+        mode: "0600"
   roles:
     - general-settings
     - ntp-client
@@ -41,7 +41,7 @@
         path: /tmp/k3s-master-node-token
         state: absent
 
-- name: deploy | master
+- name: Deploy | master
   hosts: master
   become: true
   tasks:

@@ -11,7 +11,7 @@
     owner: root
     group: root
     state: directory
-    mode: 0777
+    mode: "0777"
 
 - name: Configurar automontaje de recurso NFS backup
   ansible.posix.mount:
@@ -29,7 +29,7 @@
     owner: root
     group: root
     state: directory
-    mode: 0777
+    mode: "0777"
 
 - name: Configurar automontaje de recurso NFS media
   ansible.posix.mount:
