@@ -33,12 +33,12 @@
     flush: true
 
 - name: Configurar alternativa de iptables a iptables-legacy
-  ansible.general.alternatives:
+  community.general.alternatives:
     name: iptables
     path: /usr/sbin/iptables-legacy
 
 - name: Configurar alternativa de ip6tables a ip6tables-legacy
-  ansible.general.alternatives:
+  community.general.alternatives:
     name: ip6tables
     path: /usr/sbin/ip6tables-legacy
 
