@@ -1,6 +1,6 @@
 ---
-# Deploy in master
-- hosts: master
+- name: deploy | master
+  hosts: master
   become: true
   tasks:
     - name: Obtener token de nodo maestro
@@ -9,8 +9,8 @@
         dest: /tmp/k3s-master-node-token
         flat: true
 
-# Deploy in workers
-- hosts: workers
+- name: deploy | workers
+  hosts: workers
   become: true
   pre_tasks:
     - name: Actualizar paquetes del sistema
@@ -41,8 +41,8 @@
         path: /tmp/k3s-master-node-token
         state: absent
 
-# Deploy in master
-- hosts: master
+- name: deploy | master
+  hosts: master
   become: true
   tasks:
     - name: Etiquetar nodos k3s-worker1 como workers
