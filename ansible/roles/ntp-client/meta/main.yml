@@ -10,7 +10,7 @@ galaxy_info:
     - name: Debian
       versions:
         - buster
-galaxy_tags:
-  - system
-  - networking
+  galaxy_tags:
+    - system
+    - networking
 dependencies: []

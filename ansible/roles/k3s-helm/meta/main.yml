@@ -10,7 +10,7 @@ galaxy_info:
     - name: Debian
       versions:
         - buster
-galaxy_tags:
-  - containers
-  - cloud
+  galaxy_tags:
+    - containers
+    - cloud
 dependencies: []
