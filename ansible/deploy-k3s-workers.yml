@@ -1,29 +1,29 @@
 ---
-# Deploy in master
-- hosts: master
+- name: Deploy | master
+  hosts: master
   become: true
   tasks:
     - name: Obtener token de nodo maestro
-      fetch:
+      ansible.builtin.fetch:
         src: /var/lib/rancher/k3s/server/node-token
         dest: /tmp/k3s-master-node-token
         flat: true
 
-# Deploy in workers
-- hosts: workers
+- name: Deploy | workers
+  hosts: workers
   become: true
   pre_tasks:
     - name: Actualizar paquetes del sistema
-      apt:
+      ansible.builtin.apt:
         update_cache: "yes"
         upgrade: "yes"
     - name: Copiar archivo de token de nodo maestro a workers
-      copy:
+      ansible.builtin.copy:
         src: /tmp/k3s-master-node-token
         dest: /tmp/k3s-master-node-token
         owner: pi
         group: pi
-        mode: 0600
+        mode: "0600"
   roles:
     - general-settings
     - ntp-client
@@ -33,25 +33,25 @@
     - k3s-agent
   post_tasks:
     - name: Limpiar paquetes del cache
-      apt:
+      ansible.builtin.apt:
         autoclean: "yes"
         autoremove: "yes"
     - name: Limpiar archivo de token de nodo maestro en workers
-      file:
+      ansible.builtin.file:
         path: /tmp/k3s-master-node-token
         state: absent
 
-# Deploy in master
-- hosts: master
+- name: Deploy | master
+  hosts: master
   become: true
   tasks:
     - name: Etiquetar nodos k3s-worker1 como workers
-      command: kubectl label node k3s-worker1 node-role.kubernetes.io/worker=''
+      ansible.builtin.command: kubectl label node k3s-worker1 node-role.kubernetes.io/worker=''
       register: labelw1output
       changed_when: labelw1output.rc != 0
       failed_when: labelw1output.rc != 0
     - name: Etiquetar nodos k3s-worker2 como workers
-      command: kubectl label node k3s-worker2 node-role.kubernetes.io/worker=''
+      ansible.builtin.command: kubectl label node k3s-worker2 node-role.kubernetes.io/worker=''
       register: labelw2output
       changed_when: labelw2output.rc != 0
       failed_when: labelw2output.rc != 0

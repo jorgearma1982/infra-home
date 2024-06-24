@@ -1,12 +1,12 @@
-# ansible playbooks
+# infra-home
 
 [![CI](https://github.com/jorgearma1982/infra-home/actions/workflows/ci.yml/badge.svg)](https://github.com/jorgearma1982/infra-home/actions/workflows/ci.yml)
 
 En este repositorio mantenemos bajo control de versiones los playbooks de ansible y otras herramientas para
 automatizar el despliegue diferentes servicios en la red local, por ejemplo:
 
-* Pi-Hole: DNS con listas negras sobre máquinas `Raspberry Pi OS`..
-* K3s: cluster Kubernetes sobre maquinas `Raspberry Pi OS` (buster 10).
+* Pi-hole: DNS con listas negras sobre máquinas `Raspberry Pi OS`.
+* K3s: Cluster Kubernetes sobre maquinas `Raspberry Pi OS`.
 
 ## Instalación y configuración
 
@@ -14,40 +14,40 @@ Instalamos ansible localmente en la maquina nodo controlador:
 
 **Linux:**
 
-```
-$ sudo apt install python3
-$ pip3 install ansible yamllint ansible-lint pre-commit
+```shell
+sudo apt install python3
+pip3 install ansible yamllint ansible-lint pre-commit
 ```
 
 **MacOS:**
 
-```
-$ brew install python3
-$ pip3 install ansible yamllint ansible-lint pre-commit
+```shell
+brew install python3
+pip3 install ansible yamllint ansible-lint pre-commit
 ```
 
 Verifica que ansible está instalado:
 
-```
-$ ansible --version
+```shell
+ansible --version
 ```
 
 Verifica que ansible-lint está instalado:
 
-```
-$ ansible-lint --version
+```shell
+ansible-lint --version
 ```
 
 Instala hooks pre commit:
 
-```
-$ pre-commit install
+```shell
+pre-commit install
 ```
 
 Ahora debes generar tus llaves RSA usando el script:
 
-```
-$ scripts/generate-ssh-keys.sh
+```shell
+scripts/generate-ssh-keys.sh
 ```
 
 Este script genera un par de llaves en `ansible/inventory/.ssh`.
@@ -68,8 +68,8 @@ usar los git hooks como pre-commit para validar los archivos ansible y aplicarle
 
 Para correr manualmente `pre-commit` con todos los hooks definidos ejecutar:
 
-```
-$ pre-commit run --all-files
+```shell
+pre-commit run --all-files
 ```
 
 ## Recomendaciones de seguridad
