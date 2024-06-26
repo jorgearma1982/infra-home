@@ -1,4 +1,4 @@
-MarkupSafe==2.0.1
+MarkupSafe==2.1.5
 cffi==1.15.1
 cryptography==42.0.4
 jinja2==3.1.4
