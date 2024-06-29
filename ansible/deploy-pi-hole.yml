@@ -9,6 +9,7 @@
         upgrade: "yes"
   roles:
     - general-settings
+    - ssh-server
   post_tasks:
     - name: Limpiar paquetes del cache
       ansible.builtin.apt:
