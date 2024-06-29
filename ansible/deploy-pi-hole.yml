@@ -10,6 +10,8 @@
   roles:
     - general-settings
     - ssh-server
+    - cgroups
+    - docker
   post_tasks:
     - name: Limpiar paquetes del cache
       ansible.builtin.apt:

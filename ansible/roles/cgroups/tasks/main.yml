@@ -1,15 +1,25 @@
 ---
 # tasks file for cgroups
 
-- name: Agregar soporte cgroups de cpu y memoria al kernel
+- name: Instalar paquetes necesarios para cgroups
+  ansible.builtin.apt:
+    name:
+      - cgroup-tools
+      - libcgroup2
+    state: present
+
+- name: Verificar si la configuración de cgroups ya está presente
+  ansible.builtin.command: grep 'cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory' /boot/firmware/cmdline.txt
+  register: cgroups_config_present
+  ignore_errors: true
+  changed_when: false
+
+- name: Agregar soporte cgroups de cpu y memoria al kernel si no esta presente
   ansible.builtin.lineinfile:
-    path: /boot/cmdline.txt
+    path: /boot/firmware/cmdline.txt
     backrefs: true
     regexp: '^(.*)rootwait$'
     line: '\1rootwait cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
-  notify: restart server
-
-- name: Esperar a que el nodo reinicie
-  ansible.builtin.wait_for_connection:
-    timeout: 300
-    delay: 30
+    state: present
+  when: cgroups_config_present.rc != 0
+  notify: Reiniciar si se actualiza cmdline.txt

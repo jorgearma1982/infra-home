@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: docker
+  author: Jorge Medina
+  description: Deploy docker to run containers
+  company: KronOps
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+  galaxy_tags:
+    - containers
+dependencies: []
