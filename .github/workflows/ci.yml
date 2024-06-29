@@ -22,6 +22,9 @@ jobs:
       with:
         format: parsable
         strict: true
+    - name: Syntax check ansible pi-hole playbook
+      run: |
+        cd ansible; ansible-playbook --syntax-check deploy-pi-hole.yml
     - name: Syntax check ansible master playbook
       run: |
         cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
@@ -31,6 +34,9 @@ jobs:
     - name: Syntax check ansible helm playbooks
       run: |
         cd ansible; ansible-playbook --syntax-check deploy-k3s-helm.yml
+    - name: Lint check ansible pi-hole playbook
+      run: |
+        ansible-lint ansible/deploy-pi-hole.yml
     - name: Lint check ansible master playbook
       run: |
         ansible-lint ansible/deploy-k3s-master.yml
