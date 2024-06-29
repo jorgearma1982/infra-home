@@ -9,7 +9,7 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
-        - buster
+        - bookworm
   galaxy_tags:
     - networking
 dependencies: []

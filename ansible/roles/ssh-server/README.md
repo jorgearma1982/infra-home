@@ -1,5 +1,5 @@
 ssh-server
-===============
+==========
 
 Tasks for setting up local ssh service.
 

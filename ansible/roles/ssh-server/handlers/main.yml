@@ -1,5 +1,6 @@
 ---
 # handlers file for ssh-server
+
 - name: Restart ssh
   ansible.builtin.service:
     name: sshd
