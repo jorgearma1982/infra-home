@@ -1,5 +1,5 @@
 ---
-- name: Deploy | pi-hole
+- name: Despliega | pi-hole
   hosts: net_servers
   become: true
   pre_tasks:
