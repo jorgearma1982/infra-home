@@ -18,4 +18,4 @@
       MaxSessions 5
       PasswordAuthentication no
   notify:
-    restart ssh
+    - Restart ssh
