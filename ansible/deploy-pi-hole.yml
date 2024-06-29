@@ -1,0 +1,16 @@
+---
+- name: Deploy | pi-hole
+  hosts: net_servers
+  become: true
+  pre_tasks:
+    - name: Actualizar paquetes del sistema
+      ansible.builtin.apt:
+        update_cache: "yes"
+        upgrade: "yes"
+  roles:
+    - general-settings
+  post_tasks:
+    - name: Limpiar paquetes del cache
+      ansible.builtin.apt:
+        autoclean: "yes"
+        autoremove: "yes"
