@@ -1,0 +1,45 @@
+---
+# tasks file for docker
+
+- name: Instalar dependencias de docker
+  ansible.builtin.apt:
+    name:
+      - gnupg2
+      - software-properties-common
+      - python3-setuptools
+      - python3-pip
+      - python3-websocket
+      - python3-docker
+    state: present
+
+- name: Instalar llave de repositorio apt para docker
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Instalar el repositorio apt para docker
+  ansible.builtin.apt_repository:
+    repo: deb [arch=arm64] https://download.docker.com/linux/debian {{ docker_release }} stable
+    filename: docker
+
+- name: Instalar Docker y paquetes relacionados
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+
+- name: Agregar usuario ansible al grupo docker
+  ansible.builtin.user:
+    name: "{{ ansible_ssh_user }}"
+    append: true
+    groups: docker
+
+- name: Iniciar servicio docker al arranque del sistema
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true

@@ -1,6 +1,16 @@
 ---
 # handlers file for cgroups
 
-- name: Restart server
-  ansible.builtin.shell: nohup bash -c "/bin/sleep 5 && /sbin/shutdown -r now" &
+- name: Reiniciar si se actualiza cmdline.txt
+  ansible.builtin.reboot:
+    msg: "Reiniciando para aplicar configuración de cgroups"
+    reboot_timeout: 60
+
+- name: Verificar que los cgroups están habilitados
+  ansible.builtin.command: grep cgroup /proc/cmdline
+  register: cmdline_output
   changed_when: false
+
+- name: Mostrar resultado de la verificación de cgroups
+  ansible.builtin.debug:
+    msg: "{{ cmdline_output.stdout }}"
