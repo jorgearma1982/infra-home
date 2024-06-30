@@ -6,6 +6,11 @@
     name: samba
     state: present
 
+- name: Instala el programa expect
+  ansible.builtin.apt:
+    name: expect
+    state: present
+
 - name: Crea el directorio público compartido
   ansible.builtin.file:
     path: "{{ samba_public_shared_path }}"
@@ -33,9 +38,41 @@
     - Restart smbd
     - Restart nmbd
 
-- name: Añade usuarios Samba
+- name: Añade el grupo de usuarios al grupo Samba
+  ansible.builtin.group:
+    name: "{{ samba_group_name }}"
+    state: present
+
+- name: Añade el usuario al grupo Samba
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    groups: "{{ samba_group_name }}"
+    append: true
   loop: "{{ samba_users }}"
-  command: >
-    (echo '{{ item.password }}'; echo '{{ item.password }}') |
-    smbpasswd -a -s '{{ item.username }}'
-  when: item.password is defined
+  when: samba_users | length > 0
+
+- name: Instala el script expect para agregar usuarios Samba
+  ansible.builtin.template:
+    src: add_samba_user.sh.j2
+    dest: /usr/local/bin/add_samba_user.sh
+    mode: '0755'
+
+- name: Revisa si el usuario Samba existe
+  ansible.builtin.command: "pdbedit -L -u {{ item.username }}"
+  register: pdbedit_result
+  ignore_errors: true
+  changed_when: false
+  loop: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: samba_users | length > 0
+
+- name: Añade el usuario Samba si no esta presente
+  ansible.builtin.command: /usr/local/bin/add_samba_user.sh '{{ item.username }}' '{{ item.password }}'
+  changed_when: false
+  loop: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when:
+    - pdbedit_result.results | selectattr('rc', 'ne', 0) | list | length > 0
+    - item.password is defined

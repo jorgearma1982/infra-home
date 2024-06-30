@@ -17,10 +17,19 @@
    pam password change = yes
    usershare allow guests = yes
 
-[{{ samba_shared_name }}]
-   path = {{ samba_shared_path }}
+[{{ samba_public_shared_name }}]
+   path = {{ samba_public_shared_path }}
    browseable = yes
    writable = yes
    guest ok = yes
+   create mask = {{ samba_create_mask }}
+   directory mask = {{ samba_directory_mask }}
+
+[{{ samba_private_shared_name }}]
+   path = {{ samba_private_shared_path }}
+   browseable = yes
+   writable = yes
+   guest ok = no
+   valid users = @{{ samba_group_name }}
    create mask = {{ samba_create_mask }}
    directory mask = {{ samba_directory_mask }}

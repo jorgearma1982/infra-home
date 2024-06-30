@@ -20,6 +20,7 @@ samba_private_shared_name: "Privado"
 samba_private_shared_path: "/home/pi/privado"
 samba_create_mask: '0777'
 samba_directory_mask: '0777'
+samba_group_name: "homelab"
 samba_users:
   - { username: "pi", password: "CHANGEME" }
 
