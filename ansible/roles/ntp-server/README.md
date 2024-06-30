@@ -11,12 +11,12 @@ Ubuntu based system.
 Role Variables
 --------------
 
-Default ntp servers:
-
-ntp_server_0: 0.mx.pool.ntp.org
-ntp_server_1: 1.mx.pool.ntp.org
-ntp_server_2: 2.mx.pool.ntp.org
-ntp_server_3: 3.mx.pool.ntp.org
+ntp_servers:
+  - 0.mx.pool.ntp.org
+  - 1.mx.pool.ntp.org
+  - 2.mx.pool.ntp.org
+  - 3.mx.pool.ntp.org
+local_network: 192.168.101.0/24
 
 Dependencies
 ------------
