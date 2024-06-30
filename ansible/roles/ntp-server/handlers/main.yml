@@ -1,0 +1,7 @@
+---
+# handlers file for ntp-server
+
+- name: Restart chrony
+  ansible.builtin.service:
+    name: chrony
+    state: restarted
