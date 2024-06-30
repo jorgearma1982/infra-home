@@ -1,5 +1,5 @@
 ---
-- name: Despliega | pi-hole
+- name: Despliega | Net services
   hosts: net_servers
   become: true
   pre_tasks:
