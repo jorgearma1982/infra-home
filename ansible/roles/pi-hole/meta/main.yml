@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: pi_hole
+  author: Jorge Armando Medina
+  description: Tasks for setting up a pi-hole DNS and DHCP server
+  company: KronOps
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+  galaxy_tags:
+    - networking
+dependencies: []

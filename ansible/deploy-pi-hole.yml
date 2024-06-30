@@ -13,6 +13,7 @@
     - ntp-server
     - cgroups
     - docker
+    - pi-hole
   post_tasks:
     - name: Limpiar paquetes del cache
       ansible.builtin.apt:

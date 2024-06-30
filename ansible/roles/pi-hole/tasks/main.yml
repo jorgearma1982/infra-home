@@ -1,0 +1,76 @@
+---
+# tasks file for pi-hole
+
+- name: Instalar dependencias requeridas
+  ansible.builtin.apt:
+    name:
+      - git
+      - curl
+    state: present
+
+- name: Crear directorio para pihole
+  ansible.builtin.file:
+    path: "/home/{{ ansible_ssh_user }}/pihole"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+    state: directory
+
+- name: Crear segundo directorio para pihole
+  ansible.builtin.file:
+    path: "/home/{{ ansible_ssh_user }}/pihole/pihole"
+    mode: "0755"
+    state: directory
+
+- name: Crear configuración para FTL
+  ansible.builtin.blockinfile:
+    path: "/home/{{ ansible_ssh_user }}/pihole/pihole/pihole-FTL.conf"
+    block: MAXDBDAYS={{ pihole_ftl_max_db_days }}
+    mode: "0644"
+    create: true
+
+- name: Iniciar contenedor de pihole
+  community.docker.docker_container:
+    name: "{{ pihole_name }}"
+    image: "{{ pihole_image }}"
+    restart_policy: unless-stopped
+    env:
+      TZ: "{{ timezone }}"
+      ServerIP: "{{ pihole_serverip }}"
+      WEBPASSWORD: "{{ pihole_webpassword }}"
+      PIHOLE_DNS_: "{{ pihole_dns1 }};{{ pihole_dns1 }}"
+      DNSMASQ_LISTENING: "local"
+      DHCP_ACTIVE: "{{ dhcp_active }}"
+      DHCP_START: "{{ dhcp_start }}"
+      DHCP_END: "{{ dhcp_end }}"
+      DHCP_ROUTER: "{{ dhcp_router }}"
+      DHCP_LEASETIME: "{{ dhcp_leasetime }}"
+      PIHOLE_DOMAIN: "{{ pihole_domain }}"
+      DHCP_rapid_commit: "true"
+    dns_servers:
+      - 127.0.0.1
+      - "{{ pihole_dns1 }}"
+    network_mode: "{{ pihole_network_mode }}"
+    capabilities:
+      - NET_ADMIN
+    volumes:
+      - "/home/{{ ansible_ssh_user }}/pihole/pihole/:/etc/pihole/"
+      - "/home/{{ ansible_ssh_user }}/pihole/dnsmasq.d/:/etc/dnsmasq.d/"
+    log_driver: json-file
+    log_options:
+      max-size: "10m"
+      max-file: "5"
+
+- name: Revisar estado de contenedor de pihole
+  ansible.builtin.uri:
+    url: http://localhost/admin
+  register: result
+  until: result.status == 200
+  retries: 5
+  delay: 10
+
+- name: Eliminar versiones viejas de imágenes docker
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false
