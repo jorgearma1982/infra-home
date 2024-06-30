@@ -1,7 +1,7 @@
 ntp-client
-================
+==========
 
-Install ntp client on linux server
+Install ntp client on linux server.
 
 Requirements
 ------------

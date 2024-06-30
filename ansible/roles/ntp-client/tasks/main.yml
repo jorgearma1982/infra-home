@@ -9,10 +9,10 @@
     mode: "0644"
     state: present
   notify:
-    - restart systemd-timesyncd
+    - Restart systemd-timesyncd
 
 - name: Iniciar y habilitar servicio systemd-timesyncd
   ansible.builtin.service:
     name: systemd-timesyncd
-    state: started
     enabled: true
+    state: started
