@@ -6,9 +6,17 @@
     name: samba
     state: present
 
-- name: Crea el directorio compartido
+- name: Crea el directorio público compartido
   ansible.builtin.file:
-    path: "{{ samba_shared_path }}"
+    path: "{{ samba_public_shared_path }}"
+    state: directory
+    mode: "{{ samba_create_mask }}"
+    owner: pi
+    group: pi
+
+- name: Crea el directorio privado compartido
+  ansible.builtin.file:
+    path: "{{ samba_private_shared_path }}"
     state: directory
     mode: "{{ samba_create_mask }}"
     owner: pi
@@ -22,5 +30,12 @@
     group: root
     mode: '0644'
   notify:
-    - Restart Samba smbd
-    - Restart Samba nmbd
+    - Restart smbd
+    - Restart nmbd
+
+- name: Añade usuarios Samba
+  loop: "{{ samba_users }}"
+  command: >
+    (echo '{{ item.password }}'; echo '{{ item.password }}') |
+    smbpasswd -a -s '{{ item.username }}'
+  when: item.password is defined
