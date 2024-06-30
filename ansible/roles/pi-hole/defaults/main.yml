@@ -1,0 +1,18 @@
+---
+# defaults file for pi-hole
+
+timezone: "America/Mexico_City"
+pihole_ftl_max_db_days: "180"
+pihole_name: "pihole"
+pihole_serverip: "0.0.0.0"
+pihole_image: "pihole/pihole:latest"
+pihole_webpassword: "p1holeS3cr3t##"
+pihole_dns1: "94.140.14.14"
+pihole_dns2: "94.140.15.15"
+pihole_network_mode: host
+dhcp_active: "true"
+dhcp_start: "192.168.101.201"
+dhcp_end: "192.168.101.251"
+dhcp_router: "192.168.101.254"
+dhcp_leasetime: "24"
+pihole_domain: "hq.kronops.io"
