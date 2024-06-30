@@ -1,0 +1,16 @@
+# Use servers from the NTP Pool Project.
+{% for server in ntp_servers %}
+server {{ server }} iburst
+{% endfor %}
+
+# Allow NTP client access from local network.
+allow {{ local_network }}
+
+# Specify the stratum for the local clock.
+local stratum 10
+
+# Specify the location of the drift file.
+driftfile /var/lib/chrony/drift
+
+# Log measurements to the specified directory.
+logdir /var/log/chrony

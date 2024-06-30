@@ -1,0 +1,24 @@
+---
+# tasks file for ntp-server
+
+- name: Instalar el servidor NTP Chrony
+  ansible.builtin.apt:
+    name:
+      - chrony
+    state: present
+
+- name: Configurar el servidor NTP
+  ansible.builtin.template:
+    src: chrony.conf.j2
+    dest: /etc/chrony/chrony.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart chrony
+
+- name: Iniciar servicio chrony al arranque del sistema
+  ansible.builtin.service:
+    name: chronyd
+    enabled: true
+    state: started

@@ -10,6 +10,7 @@
   roles:
     - general-settings
     - ssh-server
+    - ntp-server
     - cgroups
     - docker
   post_tasks:

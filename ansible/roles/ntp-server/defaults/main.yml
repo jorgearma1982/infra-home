@@ -1,0 +1,9 @@
+---
+# defaults file for ntp-server
+
+ntp_servers:
+  - 0.mx.pool.ntp.org
+  - 1.mx.pool.ntp.org
+  - 2.mx.pool.ntp.org
+  - 3.mx.pool.ntp.org
+local_network: 192.168.101.0/24
