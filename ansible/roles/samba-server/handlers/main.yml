@@ -1,7 +1,12 @@
 ---
 # handlers file for samba-server
 
-- name: Restart samba
+- name: Restart Samba smbd
   ansible.builtin.service:
     name: smbd
+    state: restarted
+
+- name: Restart Samba nmbd
+  ansible.builtin.service:
+    name: nmbd
     state: restarted

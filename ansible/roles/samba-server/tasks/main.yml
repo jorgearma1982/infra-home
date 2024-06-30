@@ -21,4 +21,6 @@
     owner: root
     group: root
     mode: '0644'
-  notify: Restart Samba
+  notify:
+    - Restart Samba smbd
+    - Restart Samba nmbd
