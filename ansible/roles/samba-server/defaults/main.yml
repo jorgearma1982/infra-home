@@ -1,0 +1,10 @@
+---
+# defaults file for samba-server
+
+samba_server_string: "NAS 01"
+samba_workgroup: "HQ"
+samba_netbios_name: "NAS01"
+samba_shared_name: "Compartido"
+samba_shared_path: "/home/pi/compartido"
+samba_create_mask: '0777'
+samba_directory_mask: '0777'

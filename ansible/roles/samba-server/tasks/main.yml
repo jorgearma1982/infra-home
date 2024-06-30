@@ -1,0 +1,24 @@
+---
+# tasks file for samba-server
+
+- name: Instala el servidor Samba
+  ansible.builtin.apt:
+    name: samba
+    state: present
+
+- name: Crea el directorio compartido
+  ansible.builtin.file:
+    path: "{{ samba_shared_path }}"
+    state: directory
+    mode: "{{ samba_create_mask }}"
+    owner: pi
+    group: pi
+
+- name: Configura el servidor Samba
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Samba
