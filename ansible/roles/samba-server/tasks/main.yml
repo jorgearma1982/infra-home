@@ -32,7 +32,7 @@
     state: directory
     owner: "{{ samba_public_shared_owner }}"
     group: "{{ samba_public_shared_owner }}"
-    mode: "0775"
+    mode: "0777"
 
 - name: Crea el directorio privado compartido
   ansible.builtin.file:
