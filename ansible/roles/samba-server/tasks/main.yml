@@ -38,7 +38,7 @@
     - Restart smbd
     - Restart nmbd
 
-- name: Añade el grupo de usuarios al grupo Samba
+- name: Añade el grupo de usuarios Samba
   ansible.builtin.group:
     name: "{{ samba_group_name }}"
     state: present
@@ -49,6 +49,8 @@
     groups: "{{ samba_group_name }}"
     append: true
   loop: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.username }}"
   when: samba_users | length > 0
 
 - name: Instala el script expect para agregar usuarios Samba
@@ -66,6 +68,7 @@
   loop_control:
     label: "{{ item.username }}"
   when: samba_users | length > 0
+  no_log: true
 
 - name: Añade el usuario Samba si no esta presente
   ansible.builtin.command: /usr/local/bin/add_samba_user.sh '{{ item.username }}' '{{ item.password }}'
@@ -76,3 +79,4 @@
   when:
     - pdbedit_result.results | selectattr('rc', 'ne', 0) | list | length > 0
     - item.password is defined
+  no_log: true
