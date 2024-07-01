@@ -11,33 +11,6 @@
     name: expect
     state: present
 
-- name: Crea el directorio público compartido
-  ansible.builtin.file:
-    path: "{{ samba_public_shared_path }}"
-    state: directory
-    mode: "{{ samba_create_mask }}"
-    owner: pi
-    group: pi
-
-- name: Crea el directorio privado compartido
-  ansible.builtin.file:
-    path: "{{ samba_private_shared_path }}"
-    state: directory
-    mode: "{{ samba_create_mask }}"
-    owner: pi
-    group: pi
-
-- name: Configura el servidor Samba
-  ansible.builtin.template:
-    src: smb.conf.j2
-    dest: /etc/samba/smb.conf
-    owner: root
-    group: root
-    mode: '0644'
-  notify:
-    - Restart smbd
-    - Restart nmbd
-
 - name: Añade el grupo de usuarios Samba
   ansible.builtin.group:
     name: "{{ samba_group_name }}"
@@ -52,6 +25,33 @@
   loop_control:
     label: "{{ item.username }}"
   when: samba_users | length > 0
+
+- name: Crea el directorio público compartido
+  ansible.builtin.file:
+    path: "{{ samba_public_shared_path }}"
+    state: directory
+    owner: "{{ samba_public_shared_owner }}"
+    group: "{{ samba_public_shared_owner }}"
+    mode: "0775"
+
+- name: Crea el directorio privado compartido
+  ansible.builtin.file:
+    path: "{{ samba_private_shared_path }}"
+    state: directory
+    owner: "{{ samba_private_shared_owner }}"
+    group: "{{ samba_group_name }}"
+    mode: "0770"
+
+- name: Configura el servidor Samba
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart smbd
+    - Restart nmbd
 
 - name: Instala el script expect para agregar usuarios Samba
   ansible.builtin.template:

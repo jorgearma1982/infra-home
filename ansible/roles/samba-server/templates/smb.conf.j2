@@ -2,6 +2,7 @@
    server string = {{ samba_server_string }}
    workgroup = {{ samba_workgroup }}
    netbios name = {{ samba_netbios_name }}
+   security = user
    map to guest = Bad User
    dns proxy = no
    log file = /var/log/samba/log.%m
@@ -19,17 +20,18 @@
 
 [{{ samba_public_shared_name }}]
    path = {{ samba_public_shared_path }}
-   browseable = yes
    writable = yes
+   browseable = yes
    guest ok = yes
-   create mask = {{ samba_create_mask }}
-   directory mask = {{ samba_directory_mask }}
+   guest only = yes
+   create mask = {{ samba_public_create_mask }}
+   directory mask = {{ samba_public_directory_mask }}
 
 [{{ samba_private_shared_name }}]
    path = {{ samba_private_shared_path }}
-   browseable = yes
    writable = yes
+   browseable = yes
    guest ok = no
    valid users = @{{ samba_group_name }}
-   create mask = {{ samba_create_mask }}
-   directory mask = {{ samba_directory_mask }}
+   create mask = {{ samba_private_create_mask }}
+   directory mask = {{ samba_private_directory_mask }}
