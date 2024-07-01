@@ -1,0 +1,37 @@
+[global]
+   server string = {{ samba_server_string }}
+   workgroup = {{ samba_workgroup }}
+   netbios name = {{ samba_netbios_name }}
+   security = user
+   map to guest = Bad User
+   dns proxy = no
+   log file = /var/log/samba/log.%m
+   max log size = 1000
+   syslog = 0
+   panic action = /usr/share/samba/panic-action %d
+   server role = standalone server
+   passdb backend = tdbsam
+   obey pam restrictions = yes
+   unix password sync = yes
+   passwd program = /usr/bin/passwd %u
+   passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+   pam password change = yes
+   usershare allow guests = yes
+
+[{{ samba_public_shared_name }}]
+   path = {{ samba_public_shared_path }}
+   writable = yes
+   browseable = yes
+   guest ok = yes
+   guest only = yes
+   create mask = {{ samba_public_create_mask }}
+   directory mask = {{ samba_public_directory_mask }}
+
+[{{ samba_private_shared_name }}]
+   path = {{ samba_private_shared_path }}
+   writable = yes
+   browseable = yes
+   guest ok = no
+   valid users = @{{ samba_group_name }}
+   create mask = {{ samba_private_create_mask }}
+   directory mask = {{ samba_private_directory_mask }}

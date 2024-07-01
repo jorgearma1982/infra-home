@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+set username [lindex $argv 0]
+set password [lindex $argv 1]
+
+spawn smbpasswd -a $username
+expect "New SMB password:"
+send "$password\r"
+expect "Retype new SMB password:"
+send "$password\r"
+expect eof

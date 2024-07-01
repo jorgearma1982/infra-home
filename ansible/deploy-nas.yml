@@ -1,0 +1,19 @@
+---
+- name: Despliega | NAS services
+  hosts: nas
+  become: true
+  pre_tasks:
+    - name: Actualizar paquetes del sistema
+      ansible.builtin.apt:
+        update_cache: "yes"
+        upgrade: "yes"
+  roles:
+    - general-settings
+    - ssh-server
+    - ntp-client
+    - samba-server
+  post_tasks:
+    - name: Limpiar paquetes del cache
+      ansible.builtin.apt:
+        autoclean: "yes"
+        autoremove: "yes"

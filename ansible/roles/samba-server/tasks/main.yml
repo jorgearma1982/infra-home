@@ -1,0 +1,82 @@
+---
+# tasks file for samba-server
+
+- name: Instala el servidor Samba
+  ansible.builtin.apt:
+    name: samba
+    state: present
+
+- name: Instala el programa expect
+  ansible.builtin.apt:
+    name: expect
+    state: present
+
+- name: Añade el grupo de usuarios Samba
+  ansible.builtin.group:
+    name: "{{ samba_group_name }}"
+    state: present
+
+- name: Añade el usuario al grupo Samba
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    groups: "{{ samba_group_name }}"
+    append: true
+  loop: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: samba_users | length > 0
+
+- name: Crea el directorio público compartido
+  ansible.builtin.file:
+    path: "{{ samba_public_shared_path }}"
+    state: directory
+    owner: "{{ samba_public_shared_owner }}"
+    group: "{{ samba_public_shared_owner }}"
+    mode: "0777"
+
+- name: Crea el directorio privado compartido
+  ansible.builtin.file:
+    path: "{{ samba_private_shared_path }}"
+    state: directory
+    owner: "{{ samba_private_shared_owner }}"
+    group: "{{ samba_group_name }}"
+    mode: "0770"
+
+- name: Configura el servidor Samba
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart smbd
+    - Restart nmbd
+
+- name: Instala el script expect para agregar usuarios Samba
+  ansible.builtin.template:
+    src: add_samba_user.sh.j2
+    dest: /usr/local/bin/add_samba_user.sh
+    mode: '0755'
+
+- name: Revisa si el usuario Samba existe
+  ansible.builtin.command: "pdbedit -L -u {{ item.username }}"
+  register: pdbedit_result
+  ignore_errors: true
+  changed_when: false
+  loop: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: samba_users | length > 0
+  no_log: true
+
+- name: Añade el usuario Samba si no esta presente
+  ansible.builtin.command: /usr/local/bin/add_samba_user.sh '{{ item.username }}' '{{ item.password }}'
+  changed_when: false
+  loop: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when:
+    - pdbedit_result.results | selectattr('rc', 'ne', 0) | list | length > 0
+    - item.password is defined
+  no_log: true
