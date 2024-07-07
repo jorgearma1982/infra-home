@@ -40,13 +40,7 @@
       WEBPASSWORD: "{{ pihole_webpassword }}"
       PIHOLE_DNS_: "{{ pihole_dns1 }};{{ pihole_dns1 }}"
       DNSMASQ_LISTENING: "local"
-      DHCP_ACTIVE: "{{ dhcp_active }}"
-      DHCP_START: "{{ dhcp_start }}"
-      DHCP_END: "{{ dhcp_end }}"
-      DHCP_ROUTER: "{{ dhcp_router }}"
-      DHCP_LEASETIME: "{{ dhcp_leasetime }}"
       PIHOLE_DOMAIN: "{{ pihole_domain }}"
-      DHCP_rapid_commit: "true"
     dns_servers:
       - 127.0.0.1
       - "{{ pihole_dns1 }}"

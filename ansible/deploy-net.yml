@@ -1,5 +1,5 @@
 ---
-- name: Despliega | Net services
+- name: Despliega | NET services
   hosts: net_servers
   become: true
   pre_tasks:
