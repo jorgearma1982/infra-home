@@ -34,7 +34,7 @@
 
 - name: Agregar usuario ansible al grupo docker
   ansible.builtin.user:
-    name: "{{ ansible_ssh_user }}"
+    name: "{{ ansible_user }}"
     append: true
     groups: docker
 
