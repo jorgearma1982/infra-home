@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# script: generate-ssh-keys.sh
+# script: build-ssh-keys.sh
 # author: Jorge Armando Medina
 # desc: Generate SSH ed25519 keys for ansible.
 
