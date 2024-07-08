@@ -8,6 +8,14 @@
       - openssh-client
     state: present
 
+- name: Set issue.net banner
+  ansible.builtin.copy:
+    src: issue.net
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: "0644"
+
 - name: Asegurar configuracion de servicio ssh
   ansible.builtin.blockinfile:
     path: /etc/ssh/sshd_config
@@ -17,5 +25,6 @@
       MaxAuthTries 3
       MaxSessions 5
       PasswordAuthentication no
+      Banner /etc/issue.net
   notify:
     - Restart ssh
