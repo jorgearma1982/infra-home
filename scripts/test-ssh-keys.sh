@@ -3,7 +3,7 @@
 #
 # script: deploy-ssh-keys.sh
 # author: jorge.medina@kronops.com.mx
-# desc: Copy ansible ssh keys to server
+# desc: Test ansible ssh keys with servers
 #
 
 # main
