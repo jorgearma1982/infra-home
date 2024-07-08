@@ -44,16 +44,28 @@ Instala hooks pre commit:
 pre-commit install
 ```
 
-Ahora debes generar tus llaves RSA usando el script:
+Ahora debes generar tus llaves ssh usando el script:
 
 ```shell
-scripts/generate-ssh-keys.sh
+scripts/build-ssh-keys.sh
 ```
 
 Este script genera un par de llaves en `ansible/inventory/.ssh`.
 
 **IMPORTANTE:** No debe almacenar en el repositorio git las llaves ssh ni el archivo de inventario. Almacene estos
 archivos en una herramienta para gestionar secretos.
+
+Despliega llave ssh de ansible a servidores:
+
+```shell
+scripts/deploy-ssh-keys.sh
+```
+
+Por último hacemos una prueba para verificar que las llaves funcionan:
+
+```shell
+scripts/test-ssh-keys.sh
+```
 
 ## Workflow
 
