@@ -11,7 +11,21 @@ Debian based system.
 Role Variables
 --------------
 
-Not parameters.
+partitions:
+  - label: "DATA"
+    filesystem: "ext4"
+    mount_point: "/mnt/data"
+    opts: "defaults"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  - label: "BACKUP"
+    filesystem: "ext4"
+    mount_point: "/mnt/backup"
+    opts: "defaults"
+    owner: "root"
+    group: "root"
+    mode: "0755"
 
 Dependencies
 ------------
