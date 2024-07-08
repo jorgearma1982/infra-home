@@ -1,0 +1,35 @@
+---
+# tasks file for shell-tools
+
+- name: Instala herramientas del shell para archivos
+  ansible.builtin.apt:
+    name: "{{ file_packages }}"
+    state: present
+
+- name: Instala herramientas del shell para red
+  ansible.builtin.apt:
+    name: "{{ net_packages }}"
+    state: present
+
+- name: Instala herramientas del shell para administración
+  ansible.builtin.apt:
+    name: "{{ admin_packages }}"
+    state: present
+
+- name: Instala archivo de configuración de vim para usuarios admin
+  ansible.builtin.copy:
+    src: "dotvimrc"
+    dest: "{{ item.home }}/.vimrc"
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0600"
+  with_items: "{{ admin_users }}"
+
+- name: Instala archivo de configuración para gnu screen para usuarios admin
+  ansible.builtin.copy:
+    src: "dotscreenrc"
+    dest: "{{ item.home }}/.screenrc"
+    owner: "{{ item.name }}"
+    group: "{{ item.group }}"
+    mode: "0600"
+  with_items: "{{ admin_users }}"

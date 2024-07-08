@@ -1,0 +1,16 @@
+#
+# GNU/screen custom config
+#
+hardstatus on
+hardstatus alwayslastline
+startup_message off
+termcapinfo xterm ti@:te@
+hardstatus string "%{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+
+shell -$SHELL
+
+screen -t bash1 0
+screen -t bash1 1
+screen -t bash2 2
+screen -t bash3 3
+screen -t bash4 4

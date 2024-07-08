@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Jorge Armando Medina
+  description: Tareas para configurar herramientas del shell
+  company: KronOps
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+  galaxy_tags:
+    - system
+dependencies: []

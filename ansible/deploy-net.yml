@@ -8,6 +8,7 @@
         update_cache: "yes"
         upgrade: "yes"
   roles:
+    - shell-tools
     - general-settings
     - ssh-server
     - ntp-server

@@ -1,0 +1,28 @@
+---
+# tasks file for shell-tools
+file_packages:
+  - vim
+  - less
+  - bzip2
+  - unzip
+  - git
+net_packages:
+  - curl
+  - wget
+  - rsync
+  - dnsutils
+  - whois
+  - tcpdump
+  - nmap
+admin_packages:
+  - screen
+  - htop
+  - iotop
+  - iftop
+admin_users:
+  - name: root
+    group: root
+    home: /root
+  - name: pi
+    group: pi
+    home: /home/pi
