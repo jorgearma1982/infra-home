@@ -18,8 +18,8 @@
    pam password change = yes
    usershare allow guests = yes
 
-[{{ samba_public_shared_name }}]
-   path = {{ samba_public_shared_path }}
+[{{ samba_public_share_name }}]
+   path = {{ samba_public_share_path }}
    writable = yes
    browseable = yes
    guest ok = yes
@@ -27,8 +27,8 @@
    create mask = {{ samba_public_create_mask }}
    directory mask = {{ samba_public_directory_mask }}
 
-[{{ samba_private_shared_name }}]
-   path = {{ samba_private_shared_path }}
+[{{ samba_private_share_name }}]
+   path = {{ samba_private_share_path }}
    writable = yes
    browseable = yes
    guest ok = no

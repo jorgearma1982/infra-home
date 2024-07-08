@@ -26,22 +26,6 @@
     label: "{{ item.username }}"
   when: samba_users | length > 0
 
-- name: Crea el directorio público compartido
-  ansible.builtin.file:
-    path: "{{ samba_public_shared_path }}"
-    state: directory
-    owner: "{{ samba_public_shared_owner }}"
-    group: "{{ samba_public_shared_owner }}"
-    mode: "0777"
-
-- name: Crea el directorio privado compartido
-  ansible.builtin.file:
-    path: "{{ samba_private_shared_path }}"
-    state: directory
-    owner: "{{ samba_private_shared_owner }}"
-    group: "{{ samba_group_name }}"
-    mode: "0770"
-
 - name: Configura el servidor Samba
   ansible.builtin.template:
     src: smb.conf.j2

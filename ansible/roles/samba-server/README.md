@@ -14,14 +14,14 @@ Role Variables
 samba_server_string: "NAS 01"
 samba_workgroup: "HQ"
 samba_netbios_name: "NAS01"
-samba_public_shared_name: "Publico"
-samba_public_shared_path: "/home/pi/publico"
-samba_private_shared_name: "Privado"
-samba_private_shared_path: "/home/pi/privado"
-samba_public_shared_owner: root
-samba_private_shared_owner: "{{ ansible_user }}"
+samba_public_share_name: "Publico"
+samba_public_share_path: "/mnt/publico"
+samba_public_share_owner: "root"
 samba_public_create_mask: '0777'
 samba_public_directory_mask: '0777'
+samba_private_share_name: "Privado"
+samba_private_share_path: "/mnt/privado"
+samba_private_share_owner: "{{ ansible_user }}"
 samba_private_create_mask: '0770'
 samba_private_directory_mask: '0770'
 samba_group_name: "homelab"
