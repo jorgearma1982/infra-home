@@ -1,0 +1,34 @@
+---
+# tasks file for usb-storage
+
+- name: Instalar paquetes gestión almacenamiento
+  ansible.builtin.apt:
+    name:
+      - exfatprogs
+      - btrfs-progs
+      - xfsprogs
+    state: present
+
+- name: Crear puntos de montaje
+  ansible.builtin.file:
+    path: "{{ item.mount_point }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop: "{{ partitions }}"
+  loop_control:
+    label: "{{ item.label }}"
+
+- name: Montar particiones
+  ansible.posix.mount:
+    name: "{{ item.mount_point }}"
+    src: "LABEL={{ item.label }}"
+    fstype: "{{ item.filesystem }}"
+    opts: "{{ item.opts }}"
+    state: mounted
+    dump: 0
+    passno: 0
+  loop: "{{ partitions }}"
+  loop_control:
+    label: "{{ item.label }}"

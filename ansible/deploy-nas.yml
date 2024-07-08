@@ -11,6 +11,7 @@
     - general-settings
     - ssh-server
     - ntp-client
+    - usb-storage
     - samba-server
   post_tasks:
     - name: Limpiar paquetes del cache
