@@ -5,12 +5,12 @@ samba_server_string: "NAS 01"
 samba_workgroup: "HQ"
 samba_netbios_name: "NAS01"
 samba_public_share_name: "Publico"
-samba_public_share_path: "/srv/samba/publico"
+samba_public_share_path: "/mnt/publico"
 samba_public_share_owner: "root"
 samba_public_create_mask: '0777'
 samba_public_directory_mask: '0777'
 samba_private_share_name: "Privado"
-samba_private_share_path: "/srv/samba/privado"
+samba_private_share_path: "/mnt/privado"
 samba_private_share_owner: "{{ ansible_user }}"
 samba_private_create_mask: '0770'
 samba_private_directory_mask: '0770'
