@@ -29,7 +29,7 @@
     - ntp-client
     - ssh-server
     - cgroups
-    - nfs-client
+    - iptables-legacy
     - k3s-agent
   post_tasks:
     - name: Limpiar paquetes del cache
