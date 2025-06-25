@@ -11,8 +11,8 @@
     - general-settings
     - ntp-client
     - ssh-server
+    - iptables-legacy
     - cgroups
-    - nfs-client
     - k3s-server
   post_tasks:
     - name: Limpiar paquetes del cache
