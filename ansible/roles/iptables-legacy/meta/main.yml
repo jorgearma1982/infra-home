@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: iptables_legacy
+  author: Jorge Armando Medina
+  description: Tasks for setting up iptables legacy for cluster networking
+  company: KronOps
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+  galaxy_tags:
+    - networking
+dependencies: []
