@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  role_name: disable_swapfile
+  author: Jorge Medina
+  description: Tasks to disable swapfile
+  company: KronOps
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+  galaxy_tags:
+    - system
+    - containers
+dependencies: []
