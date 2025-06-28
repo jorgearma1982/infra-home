@@ -11,7 +11,7 @@ venv
 .vscode
 # ignore hosts
 hosts
-hosts.yml
+hosts*.yml
 # ignore vim swap
 *.swp
 *.swo
