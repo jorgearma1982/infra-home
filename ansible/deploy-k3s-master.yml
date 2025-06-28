@@ -9,10 +9,12 @@
         upgrade: "yes"
   roles:
     - general-settings
+    - shell-tools
     - ntp-client
     - ssh-server
     - iptables-legacy
-    - cgroups
+    - { role: cgroups, when: run_arm_or_rpi }
+    - { role: disable-swapfile, when: run_arm_or_rpi }
     - k3s-server
   post_tasks:
     - name: Limpiar paquetes del cache
