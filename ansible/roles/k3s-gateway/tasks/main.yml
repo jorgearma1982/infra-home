@@ -19,37 +19,28 @@
 - name: Agregar repositoro helm metallb
   ansible.builtin.command: helm repo add metallb https://metallb.github.io/metallb
   changed_when: false
-  become: false
 
 - name: Actualizar repositorios helm con metallb
   ansible.builtin.command: helm repo update
   changed_when: false
-  become: false
 
 - name: Instalar metallb
   ansible.builtin.shell: |
     helm ls -n kube-system | grep metallb || helm install metallb metallb/metallb \
-      --namespace kube-system \
-      --set configInline.address-pools[0].name={{ metallb_address_pools_0_name }} \
-      --set configInline.address-pools[0].protocol={{ metallb_address_pools_0_protocol }} \
-      --set configInline.address-pools[0].addresses[0]={{ metallb_address_pools_0_addresses_0 }}
+      --namespace kube-system
   changed_when: false
-  become: false
 
 - name: Agregar repositoro helm ingress-nginx
   ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
   changed_when: false
-  become: false
 
 - name: Actualizar repositorios helm con ingress-nginx
   ansible.builtin.command: helm repo update
   changed_when: false
-  become: false
 
 - name: Agregar namespace ingress
   ansible.builtin.shell: kubectl get ns ingress || kubectl create namespace ingress
   changed_when: false
-  become: false
 
 - name: Instalar el controlador ingress-nginx
   ansible.builtin.shell: |
@@ -62,4 +53,3 @@
       --set defaultBackend.enabled={{ ingress_nginx_default_backend_enabled }} \
       --set controller.externalTrafficPolicy={{ ingress_nginx_external_traffic_policy }}
   changed_when: false
-  become: false
