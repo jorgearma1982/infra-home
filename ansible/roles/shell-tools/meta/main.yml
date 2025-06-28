@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: shell_tools
   author: Jorge Armando Medina
   description: Tareas para configurar herramientas del shell
   company: KronOps
