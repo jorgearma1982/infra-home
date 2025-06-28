@@ -16,6 +16,7 @@
   register: taintoutput
   changed_when: taintoutput.rc != 0
   failed_when: taintoutput.rc != 0
+  when: k3s_taint_control_plane
 
 - name: Incluir tareas de configuración de kubeconfig
   ansible.builtin.import_tasks: kubeconfig.yml
