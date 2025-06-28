@@ -1,0 +1,6 @@
+---
+- name: Deploy | k3s gateway
+  hosts: master
+  become: true
+  roles:
+    - k3s-gateway

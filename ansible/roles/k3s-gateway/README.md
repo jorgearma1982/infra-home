@@ -1,7 +1,7 @@
-k3s-helm
-================
+k3s-gateway
+===========
 
-Install helm on linux server
+Tasks to install gateway services.
 
 Requirements
 ------------
@@ -25,7 +25,7 @@ To use this role, just include it in your playbook, for example:
 
     - hosts: servers
       roles:
-         - k3s-helm
+         - k3s-gateway
 
 License
 -------

@@ -1,5 +1,5 @@
 ---
-# tasks file for k3s-helm
+# tasks file for k3s-gateway
 
 - name: Crear directorio configuración kubectl
   ansible.builtin.file:

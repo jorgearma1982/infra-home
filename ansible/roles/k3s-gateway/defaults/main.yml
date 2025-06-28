@@ -1,5 +1,5 @@
 ---
-# defaults file for k3s-helm
+# defaults file for k3s-gateway
 
 # kubectl settings
 kubectl_local_user: "pi"
