@@ -1,48 +1,6 @@
 ---
 # tasks file for k3s-server
 
-- name: Desactivar memoria swap
-  ansible.builtin.command: dphys-swapfile swapoff
-  register: swapoffoutput
-  changed_when: swapoffoutput.rc != 0
-  failed_when: swapoffoutput.rc != 0
-
-- name: Eliminar archivo swapfile
-  ansible.builtin.command: dphys-swapfile uninstall
-  register: swapfileuninsoutput
-  changed_when: swapfileuninsoutput.rc != 0
-  failed_when: swapfileuninsoutput.rc != 0
-
-- name: Capturar estado de memoria swap
-  ansible.builtin.command: free -m
-  register: freeoutput
-  changed_when: freeoutput.rc != 0
-  failed_when: freeoutput.rc != 0
-
-- name: Mostrar estado de memoria swap
-  ansible.builtin.debug:
-    var: freeaoutput.stdout_lines
-
-- name: Desactivar el servicio dphys-swapfile
-  ansible.builtin.service:
-    name: dphys-swapfile.service
-    state: stopped
-    enabled: false
-
-- name: Limpiar reglas firewall iptables
-  ansible.builtin.iptables:
-    flush: true
-
-- name: Configurar alternativa de iptables a iptables-legacy
-  community.general.alternatives:
-    name: iptables
-    path: /usr/sbin/iptables-legacy
-
-- name: Configurar alternativa de ip6tables a ip6tables-legacy
-  community.general.alternatives:
-    name: ip6tables
-    path: /usr/sbin/ip6tables-legacy
-
 - name: Instalar servidor k3s
   ansible.builtin.shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 600 --disable traefik --disable servicelb
   changed_when: false
@@ -54,7 +12,10 @@
   failed_when: sleepoutput.rc != 0
 
 - name: Taint nodo maestro para no schedule
-  ansible.builtin.command: kubectl taint --overwrite node k3s-master node-role.kubernetes.io/master=true:NoSchedule
+  ansible.builtin.command: kubectl taint --overwrite node {{ inventory_hostname_short }} node-role.kubernetes.io/master=true:NoSchedule
   register: taintoutput
   changed_when: taintoutput.rc != 0
   failed_when: taintoutput.rc != 0
+
+- name: Incluir tareas de configuración de kubeconfig
+  ansible.builtin.import_tasks: kubeconfig.yml
