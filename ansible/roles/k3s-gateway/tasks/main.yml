@@ -22,6 +22,30 @@
   changed_when: false
   become: false
 
+- name: Copia manifiesto de L2Advertisement para metallb
+  ansible.builtin.template:
+    src: L2Advertisement.yml.j2
+    dest: /tmp/L2Advertisement.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso L2Advertisement para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/L2Advertisement.yml
+  changed_when: false
+
+- name: Copia manifiesto de IPAddressPool para metallb
+  ansible.builtin.template:
+    src: IPAddressPool.yml.j2
+    dest: /tmp/IPAddressPool.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso IPAddressPool para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/IPAddressPool.yml
+  changed_when: false
+
 - name: Agregar repositoro helm ingress-nginx
   ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
   changed_when: false
