@@ -11,10 +11,14 @@
   changed_when: false
   become: false
 
+- name: Agregar namespace metallb
+  ansible.builtin.shell: kubectl get ns {{ metallb_namespace }} || kubectl create namespace {{ metallb_namespace }}
+  changed_when: false
+
 - name: Instalar metallb
   ansible.builtin.shell: |
-    helm ls -n kube-system | grep metallb || helm install metallb metallb/metallb \
-      --namespace kube-system
+    helm ls -n {{ metallb_namespace }} | grep metallb || helm install metallb metallb/metallb \
+      --namespace {{ metallb_namespace }}
   changed_when: false
   become: false
 
@@ -29,13 +33,13 @@
   become: false
 
 - name: Agregar namespace ingress
-  ansible.builtin.shell: kubectl get ns ingress || kubectl create namespace ingress
+  ansible.builtin.shell: kubectl get ns {{ ingress_namespace }} || kubectl create namespace {{ ingress_namespace }}
   changed_when: false
 
 - name: Instalar el controlador ingress-nginx
   ansible.builtin.shell: |
-    helm ls -n ingress | grep ingress || helm install ingress ingress-nginx/ingress-nginx \
-      --namespace ingress \
+    helm ls -n {{ ingress_namespace }} | grep ingress || helm install ingress ingress-nginx/ingress-nginx \
+      --namespace {{ ingress_namespace }} \
       --set controller.ingressClass={{ ingress_nginx_ingress_class }} \
       --set controller.publishService.enabled={{ ingress_nginx_publish_service_enabled }} \
       --set controller.replicaCount={{ ingress_nginx_replica_count }} \
