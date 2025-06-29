@@ -24,6 +24,7 @@
         (ansible_distribution == "Raspbian" and
          ansible_distribution_version is version('12', '>='))
     - k3s-server
+    - k8s-tools
   post_tasks:
     - name: Limpiar paquetes del cache
       ansible.builtin.apt:
