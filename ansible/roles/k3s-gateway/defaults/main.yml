@@ -13,3 +13,7 @@ ingress_nginx_replica_count: "2"
 ingress_nginx_min_available: "1"
 ingress_nginx_default_backend_enabled: "false"
 ingress_nginx_external_traffic_policy: "Local"
+# external-dns settings
+external_dns_namespace: "external-dns"
+# cert-manager settings
+cert_manager_namespace: "cert-manager"
