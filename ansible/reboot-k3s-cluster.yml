@@ -7,7 +7,7 @@
   tasks:
     - name: Reinicia nodo maestro
       ansible.builtin.reboot:
-        test_command: kubectl cluster-info
+        test_command: uptime
 
 - name: Reboot | k3s workers
   hosts: workers
@@ -17,3 +17,4 @@
   tasks:
     - name: Reinicia nodos workers
       ansible.builtin.reboot:
+        test_command: uptime
