@@ -1,0 +1,19 @@
+---
+- name: Descargar Helm tar.gz
+  ansible.builtin.get_url:
+    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ k8s_arch }}.tar.gz"
+    dest: "/tmp/helm-{{ helm_version }}.tar.gz"
+    mode: '0644'
+
+- name: Extraer binario de helm
+  ansible.builtin.unarchive:
+    src: "/tmp/helm-{{ helm_version }}.tar.gz"
+    dest: /tmp/
+    remote_src: true
+
+- name: Mover helm a /usr/local/bin
+  ansible.builtin.copy:
+    src: "/tmp/linux-{{ k8s_arch }}/helm"
+    dest: /usr/local/bin/helm
+    mode: '0755'
+    remote_src: true
