@@ -1,0 +1,11 @@
+---
+k8s_tools:
+  install_kubectl: true
+  install_helm: true
+
+kubectl_version: "v1.32.5"
+helm_version: "v3.14.4"
+
+k8s_arch_map:
+  x86_64: amd64
+  aarch64: arm64

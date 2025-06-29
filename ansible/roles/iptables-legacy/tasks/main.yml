@@ -1,0 +1,21 @@
+---
+
+- name: Instalar el paquete iptables
+  ansible.builtin.apt:
+    name:
+      - iptables
+    state: present
+
+- name: Configura la altaernativa de iptables con iptables-legacy
+  community.general.alternatives:
+    name: iptables
+    path: /usr/sbin/iptables-legacy
+
+- name: Configura la altaernativa de ip6tables con ip6tables-legacy
+  community.general.alternatives:
+    name: ip6tables
+    path: /usr/sbin/ip6tables-legacy
+
+- name: Limpia todas las tablas de iptables (iptables -F)
+  ansible.builtin.iptables:
+    flush: true

@@ -5,8 +5,13 @@
 *.rsa.pub
 *.ed25519
 *.ed25519.pub
+# ignore envs
+venv
+.venv
+.vscode
 # ignore hosts
 hosts
+hosts*.yml
 # ignore vim swap
 *.swp
 *.swo

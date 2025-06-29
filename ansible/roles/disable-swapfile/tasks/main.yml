@@ -1,0 +1,30 @@
+---
+# tasks file for disable-swapfile
+
+- name: Desactivar memoria swap
+  ansible.builtin.command: dphys-swapfile swapoff
+  register: swapoffoutput
+  changed_when: swapoffoutput.rc != 0
+  failed_when: swapoffoutput.rc != 0
+
+- name: Eliminar archivo swapfile
+  ansible.builtin.command: dphys-swapfile uninstall
+  register: swapfileuninsoutput
+  changed_when: swapfileuninsoutput.rc != 0
+  failed_when: swapfileuninsoutput.rc != 0
+
+- name: Capturar estado de memoria swap
+  ansible.builtin.command: free -m
+  register: freeoutput
+  changed_when: freeoutput.rc != 0
+  failed_when: freeoutput.rc != 0
+
+- name: Mostrar estado de memoria swap
+  ansible.builtin.debug:
+    var: freeaoutput.stdout_lines
+
+- name: Desactivar el servicio dphys-swapfile
+  ansible.builtin.service:
+    name: dphys-swapfile.service
+    state: stopped
+    enabled: false

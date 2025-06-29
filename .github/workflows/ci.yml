@@ -3,7 +3,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: main
 
 env:
   PROJECT: infra-home
@@ -13,42 +13,42 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
-    - name: Install dependencies
-      run: |
-        pip3 install ansible ansible-lint
-    - uses: actions/checkout@v4
-    - name: Lint check yaml files
-      uses: ibiqlik/action-yamllint@v3
-      with:
-        format: parsable
-        strict: true
-    - name: Syntax check ansible net playbook
-      run: |
-        cd ansible; ansible-playbook --syntax-check deploy-net.yml
-    - name: Syntax check ansible nas playbook
-      run: |
-        cd ansible; ansible-playbook --syntax-check deploy-nas.yml
-    - name: Syntax check ansible master playbook
-      run: |
-        cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
-    - name: Syntax check ansible workers playbooks
-      run: |
-        cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
-    - name: Syntax check ansible helm playbooks
-      run: |
-        cd ansible; ansible-playbook --syntax-check deploy-k3s-helm.yml
-    - name: Lint check ansible net playbook
-      run: |
-        ansible-lint ansible/deploy-net.yml
-    - name: Lint check ansible nas playbook
-      run: |
-        ansible-lint ansible/deploy-nas.yml
-    - name: Lint check ansible master playbook
-      run: |
-        ansible-lint ansible/deploy-k3s-master.yml
-    - name: Lint check ansible workers playbook
-      run: |
-        ansible-lint ansible/deploy-k3s-workers.yml
-    - name: Lint check ansible helm playbook
-      run: |
-        ansible-lint ansible/deploy-k3s-helm.yml
+      - name: Install dependencies
+        run: |
+          pip3 install ansible ansible-lint
+      - uses: actions/checkout@v4
+      - name: Lint check yaml files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          format: parsable
+          strict: true
+      - name: Syntax check ansible net playbook
+        run: |
+          cd ansible; ansible-playbook --syntax-check deploy-net.yml
+      - name: Syntax check ansible nas playbook
+        run: |
+          cd ansible; ansible-playbook --syntax-check deploy-nas.yml
+      - name: Syntax check ansible master playbook
+        run: |
+          cd ansible; ansible-playbook --syntax-check deploy-k3s-master.yml
+      - name: Syntax check ansible workers playbooks
+        run: |
+          cd ansible; ansible-playbook --syntax-check deploy-k3s-workers.yml
+      - name: Syntax check ansible gateway playbooks
+        run: |
+          cd ansible; ansible-playbook --syntax-check deploy-k3s-gateway.yml
+      - name: Lint check ansible net playbook
+        run: |
+          ansible-lint ansible/deploy-net.yml
+      - name: Lint check ansible nas playbook
+        run: |
+          ansible-lint ansible/deploy-nas.yml
+      - name: Lint check ansible master playbook
+        run: |
+          ansible-lint ansible/deploy-k3s-master.yml
+      - name: Lint check ansible workers playbook
+        run: |
+          ansible-lint ansible/deploy-k3s-workers.yml
+      - name: Lint check ansible gateway playbook
+        run: |
+          ansible-lint ansible/deploy-k3s-gateway.yml

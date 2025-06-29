@@ -1,6 +1,0 @@
----
-- name: Deploy | k3s-master
-  hosts: master
-  become: true
-  roles:
-    - k3s-helm
