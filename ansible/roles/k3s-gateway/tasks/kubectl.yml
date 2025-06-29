@@ -1,6 +1,0 @@
----
-- name: Descargar kubectl
-  ansible.builtin.get_url:
-    url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ k8s_arch }}/kubectl"
-    dest: /usr/local/bin/kubectl
-    mode: '0755'
