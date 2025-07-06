@@ -15,5 +15,6 @@ ingress_nginx_default_backend_enabled: "false"
 ingress_nginx_external_traffic_policy: "Local"
 # external-dns settings
 external_dns_namespace: "external-dns"
+external_dns_tsig_key: "CHANGEME"
 # cert-manager settings
 cert_manager_namespace: "cert-manager"
