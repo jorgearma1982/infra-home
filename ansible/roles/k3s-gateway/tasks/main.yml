@@ -79,32 +79,8 @@
   changed_when: false
   become: false
 
-- name: Agregar repositoro helm external-dns
-  ansible.builtin.command: helm repo add bitnami https://charts.bitnami.com/bitnami
-  changed_when: false
-  become: false
-
-- name: Actualizar repositorios helm con external-dns
-  ansible.builtin.command: helm repo update
-  changed_when: false
-  become: false
-
-- name: Agregar namespace external-dns
-  ansible.builtin.shell: kubectl get ns {{ external_dns_namespace }} || kubectl create namespace {{ external_dns_namespace }}
-  changed_when: false
-
-- name: Instalar el controlador external-dns
-  ansible.builtin.shell: |
-    helm ls -n {{ external_dns_namespace }} | grep external-dns || helm install external-dns bitnami/external-dns \
-      --namespace {{ external_dns_namespace }} \
-      --set interval=2m \
-      --set logLevel=info \
-      --set policy=upsert-only \
-      --set registry=txt \
-      --set txtOwnerId=k3s-cluster \
-      --set replicas=1
-  changed_when: false
-  become: false
+- name: Incluir tareas de configuración de external-dns
+  ansible.builtin.import_tasks: external-dns.yml
 
 - name: Agregar repositoro helm cert-manager
   ansible.builtin.command: helm repo add jetstack https://charts.jetstack.io
