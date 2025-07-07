@@ -15,14 +15,14 @@
 
 - name: Copia manifiesto de recurso secret para para el tsig external-dns
   ansible.builtin.template:
-    src: externaldns-tsig-secret.yaml.j2
-    dest: /tmp/externaldns-tsig-secret.yaml
+    src: external-dns-tsig-secret.yaml.j2
+    dest: /tmp/external-dns-tsig-secret.yaml
     owner: root
     group: root
     mode: '0640'
 
 - name: Crear secreto con llave TSIG de bind
-  ansible.builtin.shell: kubectl apply -f /tmp/externaldns-tsig-secret.yaml
+  ansible.builtin.shell: kubectl apply -f /tmp/external-dns-tsig-secret.yaml
   changed_when: false
 
 - name: Agregar repositoro helm external-dns
@@ -32,7 +32,6 @@
 
 - name: Desplegar el controlador external-dns integrado con BIND (RFC2136)
   kubernetes.core.helm:
-    kubeconfig: "/home/{{ k3s_admin_user }}/.kube/config"
     name: external-dns
     chart_ref: bitnami/external-dns
     release_namespace: "{{ external_dns_namespace }}"
@@ -43,8 +42,8 @@
         host: "{{ bind_server_ip }}"
         port: 53
         zone: "{{ bind_zone_name }}"
-        tsigSecret: "${TSIG_SECRET}"
-        tsigKeyname: "{{ bind_tsig_name }}"
+        secretName: "{{ bind_tsig_secretname }}"
+        tsigKeyname: "{{ bind_tsig_keyname }}"
         tsigSecretAlg: hmac-sha256
         tsigAxfr: true
       sources:
@@ -55,11 +54,5 @@
       registry: txt
       txtOwnerId: "{{ inventory_hostname_short }}"
       logLevel: info
-      env:
-        - name: TSIG_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: externaldns-tsig
-              key: tsig-secret
     state: present
-  changed_when: false
+  become: false
