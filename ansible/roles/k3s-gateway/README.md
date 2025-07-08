@@ -11,12 +11,36 @@ Debian based system.
 Role Variables
 --------------
 
-Not at the moment.
+metallb settings:
+- metallb_namespace: "metallb"
+- metallb_pool_name: "default"
+- metallb_pool_addresses: "192.168.101.150-192.168.101.157"
+
+ingress-nginx settings:
+- ingress_namespace: "ingress"
+- ingress_nginx_ingress_class: "nginx"
+- ingress_nginx_publish_service_enabled: "true"
+- ingress_nginx_replica_count: "2"
+- ingress_nginx_min_available: "1"
+- ingress_nginx_default_backend_enabled: "false"
+- ingress_nginx_external_traffic_policy: "Local"
+
+external-dns settings:
+- external_dns_namespace: "external-dns"
+- bind_server_ip: "192.168.101.10"
+- bind_zone_name: "hq.kronops.io"
+- bind_tsig_keyname: "externaldns-key"
+- bind_tsig_keysecret: "CHANGEME"
+- bind_tsig_secretname: "external-dns-tsig"
+
+cert-manager settings:
+- cert_manager_namespace: "cert-manager"
+- cert_manager_org_name: "kronops"
 
 Dependencies
 ------------
 
-Not at the moment.
+This role depends on k3s-master and/or k3s-workers.
 
 Example Playbook
 ----------------
