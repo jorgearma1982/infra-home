@@ -1,12 +1,12 @@
-k3s-helm
-================
+k8s-tools
+=========
 
-Install helm on linux server
+Tareas para configurar herramientas de kubernetes para shell.
 
 Requirements
 ------------
 
-Debian based system.
+Ubuntu based system.
 
 Role Variables
 --------------
@@ -25,7 +25,7 @@ To use this role, just include it in your playbook, for example:
 
     - hosts: servers
       roles:
-         - k3s-helm
+        - k8s-tools
 
 License
 -------

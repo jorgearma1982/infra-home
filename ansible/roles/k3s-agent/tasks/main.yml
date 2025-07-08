@@ -1,48 +1,6 @@
 ---
 # tasks file for k3s-agent
 
-- name: Desactivar memoria swap
-  ansible.builtin.command: dphys-swapfile swapoff
-  register: swapoffoutput
-  changed_when: swapoffoutput.rc != 0
-  failed_when: swapoffoutput.rc != 0
-
-- name: Eliminar archivo swapfile
-  ansible.builtin.command: dphys-swapfile uninstall
-  register: swapfileuninsoutput
-  changed_when: swapfileuninsoutput.rc != 0
-  failed_when: swapfileuninsoutput.rc != 0
-
-- name: Capturar estado de memoria swap
-  ansible.builtin.command: free -m
-  register: freeoutput
-  changed_when: freeoutput.rc != 0
-  failed_when: freeoutput.rc != 0
-
-- name: Mostrar estado de memoria swap
-  ansible.builtin.debug:
-    var: freeoutput.stdout_lines
-
-- name: Desactivar el servicio dphys-swapfile
-  ansible.builtin.service:
-    name: dphys-swapfile.service
-    state: stopped
-    enabled: false
-
-- name: Limpiar reglas de firewall iptables
-  ansible.builtin.iptables:
-    flush: true
-
-- name: Configurar alternativa de iptables a iptables-legacy
-  community.general.alternatives:
-    name: iptables
-    path: /usr/sbin/iptables-legacy
-
-- name: Configurar alternativa de ip6tables a ip6tables-legacy
-  community.general.alternatives:
-    name: ip6tables
-    path: /usr/sbin/ip6tables-legacy
-
 - name: Instalar agente k3s
   ansible.builtin.shell: curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_url }} K3S_TOKEN_FILE={{ k3s_server_token }} sh -
   changed_when: false

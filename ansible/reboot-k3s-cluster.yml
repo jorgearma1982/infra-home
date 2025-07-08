@@ -1,0 +1,20 @@
+---
+- name: Reboot | k3s master
+  hosts: master
+  become: true
+  gather_facts: true
+  serial: 1
+  tasks:
+    - name: Reinicia nodo maestro
+      ansible.builtin.reboot:
+        test_command: uptime
+
+- name: Reboot | k3s workers
+  hosts: workers
+  become: true
+  gather_facts: true
+  serial: 1
+  tasks:
+    - name: Reinicia nodos workers
+      ansible.builtin.reboot:
+        test_command: uptime

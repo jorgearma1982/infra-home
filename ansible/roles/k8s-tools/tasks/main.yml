@@ -1,0 +1,10 @@
+---
+# tasks file for kubernetes-tools
+
+- name: Mapear arquitectura para descarga
+  ansible.builtin.set_fact:
+    k8s_arch: "{{ k8s_arch_map[ansible_architecture] | default('amd64') }}"
+
+- name: Incluir instalación de helm si está habilitada
+  ansible.builtin.import_tasks: helm.yml
+  when: k8s_tools.install_helm | bool

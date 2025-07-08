@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  role_name: shell_tools
+  role_name: iptables_legacy
   author: Jorge Armando Medina
-  description: Tareas para configurar herramientas del shell
+  description: Tasks for setting up iptables legacy for cluster networking
   company: KronOps
   license: MIT
   min_ansible_version: "2.9"
@@ -11,5 +11,5 @@ galaxy_info:
       versions:
         - bookworm
   galaxy_tags:
-    - system
+    - networking
 dependencies: []

@@ -1,0 +1,105 @@
+---
+# tasks file for k3s-gateway
+
+- name: Agregar repositoro helm metallb
+  ansible.builtin.command: helm repo add metallb https://metallb.github.io/metallb
+  changed_when: false
+  become: false
+
+- name: Actualizar repositorios helm con metallb
+  ansible.builtin.command: helm repo update
+  changed_when: false
+  become: false
+
+- name: Agregar namespace metallb
+  ansible.builtin.shell: kubectl get ns {{ metallb_namespace }} || kubectl create namespace {{ metallb_namespace }}
+  changed_when: false
+
+- name: Instalar metallb
+  ansible.builtin.shell: |
+    helm ls -n {{ metallb_namespace }} | grep metallb || helm install metallb metallb/metallb \
+      --namespace {{ metallb_namespace }}
+  changed_when: false
+  become: false
+
+- name: Esperar 60 secs mientras el servicio metallb inicializa
+  ansible.builtin.command: sleep 60
+  register: metallb_sleepoutput
+  changed_when: metallb_sleepoutput.rc != 0
+  failed_when: metallb_sleepoutput.rc != 0
+
+- name: Copia manifiesto de IPAddressPool para metallb
+  ansible.builtin.template:
+    src: IPAddressPool.yml.j2
+    dest: /tmp/IPAddressPool.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso IPAddressPool para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/IPAddressPool.yml
+  changed_when: false
+
+- name: Copia manifiesto de L2Advertisement para metallb
+  ansible.builtin.template:
+    src: L2Advertisement.yml.j2
+    dest: /tmp/L2Advertisement.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso L2Advertisement para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/L2Advertisement.yml
+  changed_when: false
+
+- name: Agregar repositoro helm ingress-nginx
+  ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  changed_when: false
+  become: false
+
+- name: Actualizar repositorios helm con ingress-nginx
+  ansible.builtin.command: helm repo update
+  changed_when: false
+  become: false
+
+- name: Agregar namespace ingress
+  ansible.builtin.shell: kubectl get ns {{ ingress_namespace }} || kubectl create namespace {{ ingress_namespace }}
+  changed_when: false
+
+- name: Instalar el controlador ingress-nginx
+  ansible.builtin.shell: |
+    helm ls -n {{ ingress_namespace }} | grep ingress || helm install ingress ingress-nginx/ingress-nginx \
+      --namespace {{ ingress_namespace }} \
+      --set controller.ingressClass={{ ingress_nginx_ingress_class }} \
+      --set controller.publishService.enabled={{ ingress_nginx_publish_service_enabled }} \
+      --set controller.replicaCount={{ ingress_nginx_replica_count }} \
+      --set controller.minAvailable={{ ingress_nginx_min_available }} \
+      --set defaultBackend.enabled={{ ingress_nginx_default_backend_enabled }} \
+      --set controller.externalTrafficPolicy={{ ingress_nginx_external_traffic_policy }}
+  changed_when: false
+  become: false
+
+- name: Incluir tareas de configuración de external-dns
+  ansible.builtin.import_tasks: external-dns.yml
+
+- name: Agregar repositoro helm cert-manager
+  ansible.builtin.command: helm repo add jetstack https://charts.jetstack.io
+  changed_when: false
+  become: false
+
+- name: Actualizar repositorios helm con cert-manager
+  ansible.builtin.command: helm repo update
+  changed_when: false
+  become: false
+
+- name: Agregar namespace cert-manager
+  ansible.builtin.shell: kubectl get ns {{ cert_manager_namespace }} || kubectl create namespace {{ cert_manager_namespace }}
+  changed_when: false
+
+- name: Instalar el controlador cert-manager
+  ansible.builtin.shell: |
+    helm ls -n {{ cert_manager_namespace }} | grep cert-manager || helm install cert-manager jetstack/cert-manager \
+      --namespace {{ cert_manager_namespace }} \
+      --set installCRDs=true
+  changed_when: false
+  become: false

@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  role_name: shell_tools
+  role_name: k8s_tools
   author: Jorge Armando Medina
-  description: Tareas para configurar herramientas del shell
+  description: Tareas para configurar herramientas de kubernetes para shell
   company: KronOps
   license: MIT
   min_ansible_version: "2.9"
@@ -12,4 +12,5 @@ galaxy_info:
         - bookworm
   galaxy_tags:
     - system
+    - cloud
 dependencies: []

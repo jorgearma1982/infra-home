@@ -1,3 +1,6 @@
 ---
 # defaults file for k3s-server
 k3s_channel: "stable"
+k3s_taint_control_plane: false
+k3s_admin_user: "{{ ansible_user }}"
+replace_apiserver_address: true
