@@ -1,7 +1,7 @@
 k3s-gateway
 ===========
 
-Tasks to install gateway services.
+Tasks to install kubernetes gateway services.
 
 Requirements
 ------------
