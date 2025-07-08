@@ -28,3 +28,29 @@
       installCRDs: true
     state: present
   become: false
+
+- name: Copia manifiesto de recurso clusterissuer root ca para cert-manager
+  ansible.builtin.template:
+    src: cert-manager-root-ca.yml.j2
+    dest: /tmp/cert-manager-root-ca.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso clusterissuer root ca para cert-manager
+  ansible.builtin.shell: kubectl apply -f /tmp/cert-manager-root-ca.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso clusterissuer intermediate ca para cert-manager
+  ansible.builtin.template:
+    src: cert-manager-intermediate-ca1.yml.j2
+    dest: /tmp/cert-manager-intermediate-ca1.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso clusterissuer intermediate ca para cert-manager
+  ansible.builtin.shell: kubectl apply -f /tmp/cert-manager-intermediate-ca1.yml
+  changed_when: false

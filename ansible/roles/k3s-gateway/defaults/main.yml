@@ -25,3 +25,4 @@ bind_tsig_secretname: "external-dns-tsig"
 
 # cert-manager settings
 cert_manager_namespace: "cert-manager"
+cert_manager_org_name: "kronops"
