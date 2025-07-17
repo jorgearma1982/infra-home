@@ -23,7 +23,7 @@
   kubernetes.core.helm: |
     name: ingress
     chart_ref: ingress-nginx/ingress-nginx
-    release_namespace: "{{ ingress_namespace }}"
+    release_namespace: "{{ ingress_nginx_namespace }}"
     values:
       controller.ingressClass: {{ ingress_nginx_ingress_class }}
       controller.service.externalTrafficPolicy: {{ ingress_nginx_external_traffic_policy }}
