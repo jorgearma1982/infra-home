@@ -22,8 +22,8 @@
   changed_when: false
   become: false
 
-- name: Esperar 60 secs mientras el servicio metallb inicializa
-  ansible.builtin.command: sleep 60
+- name: Esperar 210 secs mientras el servicio metallb inicializa
+  ansible.builtin.command: sleep 210
   register: metallb_sleepoutput
   changed_when: metallb_sleepoutput.rc != 0
   failed_when: metallb_sleepoutput.rc != 0
