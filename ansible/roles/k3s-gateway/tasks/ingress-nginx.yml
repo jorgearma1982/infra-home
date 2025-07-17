@@ -1,29 +1,34 @@
 ---
 # tasks file for k3s-gateway/ingress-nginx
 
+- name: Copia manifiesto de recurso namespace para ingress-nginx
+  ansible.builtin.template:
+    src: ingress-nginx-namespace.yml.j2
+    dest: /tmp/ingress-nginx-namespace.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso namespace para ingress-nginx
+  ansible.builtin.shell: kubectl apply -f /tmp/ingress-nginx-namespace.yml
+  changed_when: false
+
 - name: Agregar repositoro helm ingress-nginx
-  ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-  changed_when: false
-  become: false
-
-- name: Actualizar repositorios helm con ingress-nginx
-  ansible.builtin.command: helm repo update
-  changed_when: false
-  become: false
-
-- name: Agregar namespace ingress
-  ansible.builtin.shell: kubectl get ns {{ ingress_namespace }} || kubectl create namespace {{ ingress_namespace }}
-  changed_when: false
+  kubernetes.core.helm_repository:
+    name: ingress-nginx
+    repo_url: https://kubernetes.github.io/ingress-nginx
 
 - name: Instalar el controlador ingress-nginx
-  ansible.builtin.shell: |
-    helm ls -n {{ ingress_namespace }} | grep ingress || helm install ingress ingress-nginx/ingress-nginx \
-      --namespace {{ ingress_namespace }} \
-      --set controller.ingressClass={{ ingress_nginx_ingress_class }} \
-      --set controller.publishService.enabled={{ ingress_nginx_publish_service_enabled }} \
-      --set controller.replicaCount={{ ingress_nginx_replica_count }} \
-      --set controller.minAvailable={{ ingress_nginx_min_available }} \
-      --set defaultBackend.enabled={{ ingress_nginx_default_backend_enabled }} \
-      --set controller.externalTrafficPolicy={{ ingress_nginx_external_traffic_policy }}
-  changed_when: false
+  kubernetes.core.helm: |
+    name: ingress
+    chart_ref: ingress-nginx/ingress-nginx
+    release_namespace: "{{ ingress_namespace }}"
+    values:
+      controller.ingressClass: {{ ingress_nginx_ingress_class }}
+      controller.service.externalTrafficPolicy: {{ ingress_nginx_external_traffic_policy }}
+      controller.publishService.enabled: {{ ingress_nginx_publish_service_enabled }}
+      controller.replicaCount: {{ ingress_nginx_replica_count }}
+      controller.minAvailable: {{ ingress_nginx_min_available }}
+      defaultBackend.enabled: {{ ingress_nginx_default_backend_enabled }}
   become: false
