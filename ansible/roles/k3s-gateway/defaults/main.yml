@@ -7,7 +7,7 @@ metallb_pool_name: "default"
 metallb_pool_addresses: "192.168.101.150-192.168.101.157"
 
 # ingress-nginx settings
-ingress_namespace: "ingress"
+ingress_nginx_namespace: "ingress"
 ingress_nginx_ingress_class: "nginx"
 ingress_nginx_publish_service_enabled: "true"
 ingress_nginx_replica_count: "2"
