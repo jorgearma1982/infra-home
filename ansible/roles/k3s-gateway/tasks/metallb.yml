@@ -1,25 +1,29 @@
 ---
 # tasks file for k3s-gateway/metallb
 
+- name: Copia manifiesto de recurso namespace para metallb
+  ansible.builtin.template:
+    src: metallb-namespace.yml.j2
+    dest: /tmp/metallb-namespace.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso namespace para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/metallb-namespace.yml
+  changed_when: false
+
 - name: Agregar repositoro helm metallb
-  ansible.builtin.command: helm repo add metallb https://metallb.github.io/metallb
-  changed_when: false
-  become: false
-
-- name: Actualizar repositorios helm con metallb
-  ansible.builtin.command: helm repo update
-  changed_when: false
-  become: false
-
-- name: Agregar namespace metallb
-  ansible.builtin.shell: kubectl get ns {{ metallb_namespace }} || kubectl create namespace {{ metallb_namespace }}
-  changed_when: false
+  kubernetes.core.helm_repository:
+    name: metallb
+    repo_url: https://metallb.github.io/metallb
 
 - name: Instalar metallb
-  ansible.builtin.shell: |
-    helm ls -n {{ metallb_namespace }} | grep metallb || helm install metallb metallb/metallb \
-      --namespace {{ metallb_namespace }}
-  changed_when: false
+  kubernetes.core.helm:
+    name: metallb
+    chart_ref: metallb/metallb
+    release_namespace: "{{ metallb_namespace }}"
   become: false
 
 - name: Esperar 210 secs mientras el servicio metallb inicializa
