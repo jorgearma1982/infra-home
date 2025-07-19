@@ -1,0 +1,57 @@
+---
+# tasks file for k3s-gateway/metallb
+
+- name: Copia manifiesto de recurso namespace para metallb
+  ansible.builtin.template:
+    src: metallb-namespace.yml.j2
+    dest: /tmp/metallb-namespace.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso namespace para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/metallb-namespace.yml
+  changed_when: false
+
+- name: Agregar repositoro helm metallb
+  kubernetes.core.helm_repository:
+    name: metallb
+    repo_url: https://metallb.github.io/metallb
+
+- name: Instalar metallb
+  kubernetes.core.helm:
+    name: metallb
+    chart_ref: metallb/metallb
+    release_namespace: "{{ metallb_namespace }}"
+  become: false
+
+- name: Esperar 210 secs mientras el servicio metallb inicializa
+  ansible.builtin.command: sleep 210
+  register: metallb_sleepoutput
+  changed_when: metallb_sleepoutput.rc != 0
+  failed_when: metallb_sleepoutput.rc != 0
+
+- name: Copia manifiesto de IPAddressPool para metallb
+  ansible.builtin.template:
+    src: IPAddressPool.yml.j2
+    dest: /tmp/IPAddressPool.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso IPAddressPool para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/IPAddressPool.yml
+  changed_when: false
+
+- name: Copia manifiesto de L2Advertisement para metallb
+  ansible.builtin.template:
+    src: L2Advertisement.yml.j2
+    dest: /tmp/L2Advertisement.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso L2Advertisement para metallb
+  ansible.builtin.shell: kubectl apply -f /tmp/L2Advertisement.yml
+  changed_when: false
