@@ -25,4 +25,4 @@
   notify: Reiniciar si se actualiza cmdline.txt
 
 - name: Limpiar handlers
-  ansible-.builtin.meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
