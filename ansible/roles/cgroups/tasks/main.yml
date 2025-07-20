@@ -23,3 +23,6 @@
     state: present
   when: cgroups_config_present.rc != 0
   notify: Reiniciar si se actualiza cmdline.txt
+
+- name: Limpiar handlers
+  ansible-.builtin.meta: flush_handlers
