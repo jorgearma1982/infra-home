@@ -29,6 +29,16 @@
     state: present
   become: false
 
+- name: Esperar hasta que el servicio cert-manager inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: cert-manager
+    namespace: "{{ cert_manager_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
 - name: Copia manifiesto de recurso clusterissuer root ca para cert-manager
   ansible.builtin.template:
     src: cert-manager-root-ca.yml.j2
