@@ -32,3 +32,13 @@
       controller.minAvailable: "{{ ingress_nginx_min_available }}"
       defaultBackend.enabled: "{{ ingress_nginx_default_backend_enabled }}"
   become: false
+
+- name: Esperar hasta que el servicio ingress-nginx inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: ingress-ingress-nginx-controller
+    namespace: "{{ ingress_nginx_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false

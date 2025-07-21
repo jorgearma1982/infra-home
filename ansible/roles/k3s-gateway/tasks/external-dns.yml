@@ -56,3 +56,13 @@
       logLevel: info
     state: present
   become: false
+
+- name: Esperar hasta que el servicio external-dns inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: external-dns
+    namespace: "{{ external_dns_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
