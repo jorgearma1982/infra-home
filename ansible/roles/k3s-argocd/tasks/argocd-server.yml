@@ -1,0 +1,42 @@
+---
+# tasks file for k3s-argocd/argocd-server
+
+- name: Copia manifiesto de recurso namespace para argocd
+  ansible.builtin.template:
+    src: argocd-namespace.yml.j2
+    dest: /tmp/argocd-namespace.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso namespace para argocd
+  ansible.builtin.shell: kubectl apply -f /tmp/argocd-namespace.yml
+  changed_when: false
+
+- name: Agregar repositoro helm argocd
+  kubernetes.core.helm_repository:
+    name: argo
+    repo_url: https://argoproj.github.io/argo-helm
+
+- name: Instalar el servicio Argo CD
+  kubernetes.core.helm:
+    name: argocd
+    chart_ref: argo/argo-cd
+    release_namespace: "{{ argocd_namespace }}"
+    values:
+      global.image.tag: "{{ argocd_version }}"
+      global.domain: "{{ argocd_domain }}"
+  become: false
+
+- name: Copia manifiesto de Ingress para argocd
+  ansible.builtin.template:
+    src: argocd_ingress.yml.j2
+    dest: /tmp/argocd_ingress.yml
+    owner: root
+    group: root
+    mode: '0640'
+
+- name: Instala recurso Ingress para argocd
+  ansible.builtin.shell: kubectl apply -f /tmp/argocd_ingress.yml
+  changed_when: false
