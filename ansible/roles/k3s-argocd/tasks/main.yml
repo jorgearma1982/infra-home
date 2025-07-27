@@ -3,3 +3,6 @@
 
 - name: Incluir tareas de configuración de argocd
   ansible.builtin.import_tasks: argocd-server.yml
+
+- name: Incluir tareas de configuración recursos de argocd
+  ansible.builtin.import_tasks: argocd-resources.yml
