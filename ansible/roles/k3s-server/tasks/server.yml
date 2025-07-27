@@ -5,11 +5,25 @@
   ansible.builtin.shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 600 --disable traefik --disable servicelb
   changed_when: false
 
-- name: Esperar 30 secs mientras el servidor inicializa
-  ansible.builtin.command: sleep 30
-  register: sleepoutput
-  changed_when: sleepoutput.rc != 0
-  failed_when: sleepoutput.rc != 0
+- name: Esperar hasta que el servicio coredns inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: coredns
+    namespace: kube-system
+    wait: true
+    wait_sleep: 5
+    wait_timeout: 30
+  become: false
+
+- name: Esperar hasta que el servicio metrics-server inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: metrics-server
+    namespace: kube-system
+    wait: true
+    wait_sleep: 5
+    wait_timeout: 30
+  become: false
 
 - name: Taint nodo maestro para no schedule
   ansible.builtin.command: kubectl taint --overwrite node {{ inventory_hostname_short }} node-role.kubernetes.io/master=true:NoSchedule
