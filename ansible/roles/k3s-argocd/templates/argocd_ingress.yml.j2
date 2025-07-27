@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "argocd.hq.kronops.io"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "kronops-devops-intermediate-ca1-issuer"
+    cert-manager.io/common-name: "argocd.hq.kronops.io"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: argocd.hq.kronops.io
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: https
+  tls:
+    - secretName: argocd-server-tls
+      hosts:
+        - argocd.hq.kronops.io

@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: argocd
+  labels:
+    owner: yorch
+    team: platform
+spec:
+  description: Platform engineering team
+  destinations:
+    - name: '*'
+      namespace: '*'
+      server: '*'
+  sourceRepos:
+    - '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
