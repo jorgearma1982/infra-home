@@ -1,0 +1,41 @@
+---
+# tasks file for k3s-argocd/argocd-resources
+
+- name: Copia manifiesto de recurso project para argocd
+  ansible.builtin.template:
+    src: argocd_project.yml.j2
+    dest: /tmp/argocd_project.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso project para argocd
+  ansible.builtin.shell: kubectl apply -f /tmp/argocd_project.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso configmap para argocd
+  ansible.builtin.template:
+    src: argocd_config.yml.j2
+    dest: /tmp/argocd_config.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso configmap para argocd
+  ansible.builtin.shell: kubectl apply -f /tmp/argocd_config.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso configmap RBAC para argocd
+  ansible.builtin.template:
+    src: argocd_config_rbac.yml.j2
+    dest: /tmp/argocd_config_rbac.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso configmap RBAC para argocd
+  ansible.builtin.shell: kubectl apply -f /tmp/argocd_config_rbac.yml
+  changed_when: false
