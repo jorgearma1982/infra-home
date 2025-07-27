@@ -20,9 +20,13 @@ external_dns_namespace: "external-dns"
 bind_server_ip: "192.168.101.10"
 bind_zone_name: "hq.kronops.io"
 bind_tsig_keyname: "externaldns-key"
-bind_tsig_keysecret: "CHANGEME"
-bind_tsig_secretname: "external-dns-tsig"
+bind_tsig_keysecret: "CHANGEME" # pragma: allowlist secret
+bind_tsig_secretname: "external-dns-tsig" # pragma: allowlist secret
 
 # cert-manager settings
 cert_manager_namespace: "cert-manager"
 cert_manager_org_name: "kronops"
+ca_secret_name: "{{ cert_manager_org_name }}-root-ca-secret"
+ca_output_dir: /usr/local/share/ca-certificates/local
+ca_output_file: "{{ cert_manager_org_name }}-root-ca.crt"
+ca_custom_dir: ./inventory/.certs
