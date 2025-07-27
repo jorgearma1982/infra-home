@@ -38,24 +38,24 @@
 
 - name: Copia manifiesto de IPAddressPool para metallb
   ansible.builtin.template:
-    src: IPAddressPool.yml.j2
-    dest: /tmp/IPAddressPool.yml
+    src: metallb-ipaddresspool.yml.j2
+    dest: /tmp/metallb-ipaddresspool.yml
     owner: root
     group: root
     mode: '0640'
 
 - name: Instala recurso IPAddressPool para metallb
-  ansible.builtin.shell: kubectl apply -f /tmp/IPAddressPool.yml
+  ansible.builtin.shell: kubectl apply -f /tmp/metallb-ipaddresspool.yml
   changed_when: false
 
 - name: Copia manifiesto de L2Advertisement para metallb
   ansible.builtin.template:
-    src: L2Advertisement.yml.j2
-    dest: /tmp/L2Advertisement.yml
+    src: metallb-l2advertisement.yml.j2
+    dest: /tmp/metallb-l2advertisement.yml
     owner: root
     group: root
     mode: '0640'
 
 - name: Instala recurso L2Advertisement para metallb
-  ansible.builtin.shell: kubectl apply -f /tmp/L2Advertisement.yml
+  ansible.builtin.shell: kubectl apply -f /tmp/metallb-l2advertisement.yml
   changed_when: false
