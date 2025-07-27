@@ -1,0 +1,6 @@
+---
+- name: Deploy | k3s argocd
+  hosts: k3s-devops.hq.kronops.io
+  become: true
+  roles:
+    - k3s-argocd
