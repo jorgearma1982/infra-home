@@ -1,0 +1,20 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: whoami.hq.kronops.io
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: whoami.hq.kronops.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami
+                port:
+                  number: 8080
