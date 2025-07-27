@@ -12,3 +12,6 @@
 
 - name: Incluir tareas de configuración de cert-manager
   ansible.builtin.import_tasks: cert-manager.yml
+
+- name: Incluir tareas de configuración de get-root-ca-certs
+  ansible.builtin.import_tasks: get-root-ca-certs.yml
