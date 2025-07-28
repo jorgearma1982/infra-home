@@ -146,6 +146,12 @@ Para desplegar K3s en el nodo maestro ejecutamos:
 ansible-playbook deploy-k3s-master.yml
 ```
 
+Para desplegar la configuración de los clusters en local:
+
+```shell
+ansible-playbook deploy-local-kubeconfig.yml
+```
+
 **Workers:**
 
 Para desplegar K3s en los nodos workers ejecutamos:
