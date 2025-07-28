@@ -17,3 +17,14 @@
     dest: /usr/local/bin/helm
     mode: '0755'
     remote_src: true
+
+- name: Verificar si helm-diff está instalado
+  ansible.builtin.command: helm plugin list
+  register: helm_plugins
+  changed_when: false
+
+- name: Instalar plugin helm-diff si no está presente
+  ansible.builtin.shell: helm plugin install https://github.com/databus23/helm-diff
+  when: "'diff' not in helm_plugins.stdout"
+  become: false
+  changed_when: false
