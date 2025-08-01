@@ -1,0 +1,35 @@
+---
+- name: Instalar certificado raíz localmente en el nodo controlador (Ansible)
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    ca_cert: "{{ groups['master'] | map('extract', hostvars, 'cert_manager_org_name') | list }}"
+    ca_custom_dir: ./inventory/.certs
+    ca_src_path: "{{ ca_custom_dir }}/{{ ca_output_file }}"
+    ca_dest_dir: /usr/local/share/ca-certificates/local
+
+  tasks:
+    - name: Asegurar directorio de certificados confiables existe
+      ansible.builtin.file:
+        path: "{{ ca_dest_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copiar certificado raíz a directorio del sistema
+      ansible.builtin.copy:
+        src: "{{ ca_custom_dir }}/{{ item }}-root-ca.crt"
+        dest: "{{ ca_dest_dir }}/{{ item }}-root-ca.crt"
+        mode: '0644'
+      loop: "{{ ca_cert }}"
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Registrar CA como confiable (update-ca-certificates)
+      ansible.builtin.command: update-ca-certificates
+      register: update_result
+      changed_when: "'added' in update_result.stdout"
+
+    - name: Verificar salida de update-ca-certificates
+      ansible.builtin.debug:
+        msg: "{{ update_result.stdout }}"
