@@ -29,6 +29,70 @@
       global.domain: "{{ argocd_domain }}"
   become: false
 
+- name: Esperar hasta que el servicio argocd-redis inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: argocd-redis
+    namespace: "{{ argocd_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
+- name: Esperar hasta que el servicio argocd-server inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: argocd-server
+    namespace: "{{ argocd_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
+- name: Esperar hasta que el servicio argocd-repo-server inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: argocd-repo-server
+    namespace: "{{ argocd_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
+- name: Esperar hasta que el servicio argocd-applicationset-controller inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: argocd-applicationset-controller
+    namespace: "{{ argocd_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
+- name: Esperar hasta que el servicio argocd-dex-server inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: argocd-dex-server
+    namespace: "{{ argocd_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
+- name: Esperar hasta que el servicio argocd-notifications-controller inicialice
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: argocd-notifications-controller
+    namespace: "{{ argocd_namespace }}"
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 210
+  become: false
+
+- name: Espera a que argocd-server responda
+  ansible.builtin.wait_for:
+    timeout: 30
+
 - name: Copia manifiesto de Ingress para argocd
   ansible.builtin.template:
     src: argocd_ingress.yml.j2
@@ -40,3 +104,15 @@
 - name: Instala recurso Ingress para argocd
   ansible.builtin.shell: kubectl apply -f /tmp/argocd_ingress.yml
   changed_when: false
+
+- name: Espera hasta que argocd responda con estado 200
+  ansible.builtin.uri:
+    url: 'https://{{ argocd_domain }}/'
+    return_content: true
+    validate_certs: true
+    status_code:
+      - 200
+  register: uri_output
+  retries: 12
+  delay: 10
+  until: uri_output.status == 200

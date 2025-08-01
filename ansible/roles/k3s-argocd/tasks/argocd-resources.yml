@@ -39,3 +39,16 @@
 - name: Instala recurso configmap RBAC para argocd
   ansible.builtin.shell: kubectl apply -f /tmp/argocd_config_rbac.yml
   changed_when: false
+
+- name: Copia manifiesto de recurso repository para argocd
+  ansible.builtin.template:
+    src: argocd_repo_infra_home.yml.j2
+    dest: /tmp/argocd_repo_infra_home.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso repository argocd
+  ansible.builtin.shell: kubectl apply -f /tmp/argocd_repo_infra_home.yml
+  changed_when: false

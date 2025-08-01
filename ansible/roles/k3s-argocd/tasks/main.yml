@@ -1,8 +1,11 @@
 ---
 # tasks file for k3s-argocd
 
-- name: Incluir tareas de configuración de argocd
+- name: Incluir tareas de configuración de argocd server
   ansible.builtin.import_tasks: argocd-server.yml
+
+- name: Incluir tareas de configuración de argocd cli
+  ansible.builtin.import_tasks: argocd-cli.yml
 
 - name: Incluir tareas de configuración recursos de argocd
   ansible.builtin.import_tasks: argocd-resources.yml
