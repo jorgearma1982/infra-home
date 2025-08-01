@@ -1,0 +1,85 @@
+---
+- name: Verificar si argocd CLI ya está instalado
+  ansible.builtin.stat:
+    path: /usr/local/bin/argocd
+  register: argocd_cli_stat
+
+- name: Descargar argocd CLI si no existe
+  ansible.builtin.get_url:
+    url: "{{ argocd_cli_url }}"
+    dest: /usr/local/bin/argocd
+    mode: '0755'
+  when: not argocd_cli_stat.stat.exists
+
+- name: Verificar si existe el secreto de admin inicial
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Secret
+    namespace: argocd
+    name: argocd-initial-admin-secret
+  register: admin_secret
+  failed_when: false
+  become: false
+
+- name: Obtener contraseña inicial del admin si el secreto existe
+  ansible.builtin.command: >
+    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}"
+  environment:
+    KUBECONFIG: "/home/{{ k3s_admin_user }}/.kube/config"
+  register: raw_password_b64
+  when: admin_secret.resources | length > 0
+  changed_when: false
+  become: false
+
+- name: Decodificar contraseña base64
+  ansible.builtin.set_fact:
+    argocd_initial_password: "{{ raw_password_b64.stdout | b64decode }}"
+  when: admin_secret.resources | length > 0
+  changed_when: false
+  become: false
+
+- name: Login inicial con contraseña temporal
+  ansible.builtin.command: >
+    argocd login {{ argocd_domain }}
+      --username admin
+      --password {{ argocd_initial_password }}
+      --grpc-web
+  when: admin_secret.resources | length > 0
+  changed_when: false
+  become: false
+
+- name: Cambiar contraseña del admin
+  ansible.builtin.command: >
+    argocd account update-password
+      --current-password {{ argocd_initial_password }}
+      --new-password {{ argocd_admin_password }}
+  when: admin_secret.resources | length > 0
+  changed_when: true
+  become: false
+
+- name: Borrar el secreto inicial después del cambio de contraseña
+  kubernetes.core.k8s:
+    state: absent
+    kind: Secret
+    namespace: argocd
+    name: argocd-initial-admin-secret
+  when: admin_secret.resources | length > 0
+  changed_when: true
+  become: false
+
+- name: Login con nueva contraseña del admin
+  ansible.builtin.command: >
+    argocd login {{ argocd_domain }}
+      --username admin
+      --password {{ argocd_admin_password }}
+      --grpc-web
+  changed_when: false
+  become: false
+
+- name: Obtener lista de contextos
+  ansible.builtin.command: kubectl config get-contexts -o name
+  environment:
+    KUBECONFIG: "/home/{{ k3s_admin_user }}/.kube/config"
+  register: kube_contexts
+  changed_when: false
+  become: false

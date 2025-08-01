@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-infra-home
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  name: infra-home
+  type: git
+  url: https://github.com/jorgearma1982/infra-home.git
+  project: platform
