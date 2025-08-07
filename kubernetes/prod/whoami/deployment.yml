@@ -4,16 +4,16 @@ kind: Deployment
 metadata:
   name: whoami
   labels:
-    run: whoami
+    app: whoami
 spec:
   replicas: 3
   selector:
     matchLabels:
-      run: whoami
+      app: whoami
   template:
     metadata:
       labels:
-        run: whoami
+        app: whoami
     spec:
       serviceAccountName: whoami
       containers:
@@ -21,7 +21,7 @@ spec:
           image: traefik/whoami:v1.9.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           resources:
             limits:
               cpu: 1024m
