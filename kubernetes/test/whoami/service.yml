@@ -4,11 +4,11 @@ kind: Service
 metadata:
   name: whoami
   labels:
-    run: whoami
+    app: whoami
 spec:
   type: ClusterIP
   selector:
-    run: whoami
+    app: whoami
   ports:
     - port: 8080
       targetPort: 80
