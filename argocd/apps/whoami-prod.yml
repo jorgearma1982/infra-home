@@ -16,7 +16,7 @@ spec:
   source:
     path: kubernetes/prod/whoami
     repoURL: https://github.com/jorgearma1982/infra-home.git
-    targetRevision: HEAD
+    targetRevision: jmedina/deploy_argocd_apps
   syncPolicy:
     automated:
       prune: true
