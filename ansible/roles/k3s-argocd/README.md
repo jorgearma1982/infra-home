@@ -11,6 +11,13 @@ Debian based system.
 Role Variables
 --------------
 
+argocd_namespace: "argocd"
+argocd_version: "v3.0.11"
+argocd_domain: "argocd.hq.kronops.io"
+argocd_cli_url: "https://github.com/argoproj/argo-cd/releases/download/{{ argocd_version }}/argocd-linux-amd64"
+argocd_admin_password: "CHANGEME" # pragma: allowlist secret
+k3s_admin_user: "{{ ansible_user }}"
+
 Dependencies
 ------------
 
