@@ -1,0 +1,42 @@
+---
+- name: Deploy | Argo CD CLI en local y registra clusters en Argo CD
+  hosts: localhost
+  connection: local
+  become: false
+  vars_files:
+    - roles/k3s-argocd/defaults/main.yml
+
+  tasks:
+    - name: Verificar si argocd CLI ya está instalado
+      ansible.builtin.stat:
+        path: /usr/local/bin/argocd
+      register: argocd_cli_stat
+      become: true
+
+    - name: Descargar argocd CLI si no existe
+      ansible.builtin.get_url:
+        url: "{{ argocd_cli_url }}"
+        dest: /usr/local/bin/argocd
+        mode: '0755'
+      when: not argocd_cli_stat.stat.exists
+      become: true
+
+    - name: Autenticarse en ArgoCD con el CLI
+      ansible.builtin.command: >
+        argocd login {{ argocd_domain }}
+          --username admin
+          --password {{ argocd_admin_password }}
+          --grpc-web
+      changed_when: false
+
+    - name: Obtener lista de contextos
+      ansible.builtin.command: kubectl config get-contexts -o name
+      register: kube_contexts
+      changed_when: false
+
+    - name: Registrar cluster en ArgoCD
+      ansible.builtin.command: >
+        argocd cluster add {{ item }} --yes
+      register: result
+      changed_when: "'is already managed' not in result.stdout"
+      loop: "{{ kube_contexts.stdout_lines }}"
