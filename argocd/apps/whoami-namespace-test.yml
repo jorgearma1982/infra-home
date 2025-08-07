@@ -1,0 +1,18 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    environment: test
+    owner: yorch
+    service: whoami
+  name: test-namespace
+  namespace: argocd
+spec:
+  destination:
+    server: https://10.101.165.11:6443
+  project: platform
+  source:
+    path: kubernetes/test
+    repoURL: https://github.com/jorgearma1982/infra-home.git
+    targetRevision: HEAD
