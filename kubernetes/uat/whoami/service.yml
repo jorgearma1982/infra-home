@@ -10,5 +10,5 @@ spec:
     app: whoami
   ports:
     - port: 8080
-      targetPort: 80
+      targetPort: 8080
       protocol: TCP
