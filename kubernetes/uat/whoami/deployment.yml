@@ -4,16 +4,16 @@ kind: Deployment
 metadata:
   name: whoami
   labels:
-    run: whoami
+    app: whoami
 spec:
   replicas: 2
   selector:
     matchLabels:
-      run: whoami
+      app: whoami
   template:
     metadata:
       labels:
-        run: whoami
+        app: whoami
     spec:
       serviceAccountName: whoami
       containers:

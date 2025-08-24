@@ -1,0 +1,80 @@
+---
+# tasks file for k3s-argocd-apps
+
+- name: Copia manifiesto de recurso applicación argocd whoami namespace test
+  ansible.builtin.copy:
+    src: whoami-namespace-test.yml
+    dest: /tmp/whoami-namespace-test.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd whoami namespace test
+  ansible.builtin.shell: kubectl apply -f /tmp/whoami-namespace-test.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso applicación argocd whoami namespace uat
+  ansible.builtin.copy:
+    src: whoami-namespace-uat.yml
+    dest: /tmp/whoami-namespace-uat.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd whoami namespace uat
+  ansible.builtin.shell: kubectl apply -f /tmp/whoami-namespace-uat.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso applicación argocd whoami namespace prod
+  ansible.builtin.copy:
+    src: whoami-namespace-prod.yml
+    dest: /tmp/whoami-namespace-prod.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd whoami namespace prod
+  ansible.builtin.shell: kubectl apply -f /tmp/whoami-namespace-prod.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso applicación argocd whoami app test
+  ansible.builtin.copy:
+    src: whoami-app-test.yml
+    dest: /tmp/whoami-app-test.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd whoami app test
+  ansible.builtin.shell: kubectl apply -f /tmp/whoami-app-test.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso applicación argocd whoami app uat
+  ansible.builtin.copy:
+    src: whoami-app-uat.yml
+    dest: /tmp/whoami-app-uat.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd whoami app uat
+  ansible.builtin.shell: kubectl apply -f /tmp/whoami-app-uat.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso applicación argocd whoami app prod
+  ansible.builtin.copy:
+    src: whoami-app-prod.yml
+    dest: /tmp/whoami-app-prod.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd whoami app prod
+  ansible.builtin.shell: kubectl apply -f /tmp/whoami-app-prod.yml
+  changed_when: false

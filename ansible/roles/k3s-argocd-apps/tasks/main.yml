@@ -1,0 +1,5 @@
+---
+# tasks file for k3s-argocd-apps
+
+- name: Incluir tareas de configuración recursos de apps de argocd
+  ansible.builtin.import_tasks: argocd-apps.yml
