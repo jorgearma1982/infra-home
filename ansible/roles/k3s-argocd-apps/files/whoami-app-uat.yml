@@ -3,16 +3,22 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   labels:
-    environment: prod
+    environment: uat
     owner: yorch
     service: whoami
-  name: prod-namespace
+    component: api
+  name: whoami-app-uat
   namespace: argocd
 spec:
   destination:
-    server: https://10.101.165.13:6443
+    namespace: whoami
+    server: https://10.101.165.12:6443
   project: platform
   source:
-    path: kubernetes/prod
+    path: kubernetes/uat/whoami
     repoURL: https://github.com/jorgearma1982/infra-home.git
     targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

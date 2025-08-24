@@ -6,7 +6,7 @@ metadata:
     environment: uat
     owner: yorch
     service: whoami
-  name: uat-namespace
+  name: whoami-namespace-uat
   namespace: argocd
 spec:
   destination:
