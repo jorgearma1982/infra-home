@@ -1,0 +1,99 @@
+{
+	"name": "SRE",
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
+	"features": {
+		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+		"ghcr.io/schlich/devcontainer-features/powerlevel10k:1": {},
+		"ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {
+			"defaultUser": true,
+			"setLocale": true,
+			"theme": "agnoster",
+			"plugins": "git",
+			"desiredLocale": "en_US.UTF-8 UTF-8"
+		},
+		"ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+			"plugins": "ssh-agent npm",
+			"omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions",
+			"username": "vscode"
+		},
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "2.51.0"
+		},
+		"ghcr.io/devcontainers-extra/features/packer-asdf:2": {
+			"version": "1.14.2"
+		},
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"version": "1.5.6",
+			"tflint": "0.55.1",
+			"installTerraformDocs": true,
+			"installTFsec": true,
+			"terragrunt": "0.72.5"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-extra/features/pre-commit:2": {
+			"version": "latest"
+		},
+		"ghcr.io/dhoeric/features/google-cloud-cli:1": {
+			"installGkeGcloudAuthPlugin": true
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"yzhang.markdown-all-in-one",
+				"davidanson.vscode-markdownlint",
+				"redhat.vscode-yaml",
+				"discretegames.f5anything",
+				"timonwong.shellcheck",
+				"hashicorp.terraform",
+				"4ops.terraform",
+				"4ops.packer",
+				"github.vscode-github-actions"
+			],
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"terminal.integrated.profiles.linux": {
+					"zsh": {
+						"path": "/usr/bin/zsh"
+					}
+				},
+				// Activa formato al guardar.
+				"editor.formatOnSave": true,
+				"editor.formatOnSaveMode": "file",
+				"editor.formatOnPaste": false,
+				"editor.formatOnType": false,
+				// Activar soporte EditorConfig
+				"editor.useEditorConfig": true,
+				"editor.detectIndentation": false,
+				// Desactivar valores que pueden entrar en conflicto con .editorconfig
+				"editor.insertSpaces": null,
+				"editor.tabSize": null,
+				"files.trimTrailingWhitespace": null,
+				"files.insertFinalNewline": null,
+				"[markdown]": {
+					"editor.defaultFormatter": "yzhang.markdown-all-in-one",
+					"editor.formatOnSave": true
+				},
+				"[yaml]": {
+					"editor.defaultFormatter": "redhat.vscode-yaml",
+					"editor.tabSize": 2
+				},
+				"[terraform]": {
+					"editor.defaultFormatter": "hashicorp.terraform",
+					"editor.tabSize": 2
+				}
+			}
+		}
+	},
+	"remoteUser": "vscode",
+	"mounts": [
+		"source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+	],
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+}
