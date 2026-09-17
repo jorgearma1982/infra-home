@@ -3,10 +3,11 @@
 [![CI](https://github.com/jorgearma1982/infra-home/actions/workflows/ci.yml/badge.svg)](https://github.com/jorgearma1982/infra-home/actions/workflows/ci.yml)
 
 En este repositorio mantenemos bajo control de versiones los playbooks de ansible y otras herramientas para
-automatizar el despliegue diferentes servicios en la red local, por ejemplo:
+automatizar el despliegue de diferentes servicios en la red local, por ejemplo:
 
 * Pi-hole: DNS con listas negras sobre máquinas `Raspberry Pi OS`.
-* K3s: Cluster Kubernetes sobre maquinas `Raspberry Pi OS`.
+* K3s: Cluster Kubernetes sobre máquinas `Raspberry Pi OS`.
+* Argo CD: GitOps para las aplicaciones del cluster.
 
 ## Instalación y configuración
 
@@ -16,27 +17,18 @@ Instalamos ansible localmente en la maquina nodo controlador:
 
 ```shell
 sudo apt install python3
-pip3 install ansible yamllint ansible-lint pre-commit
+pip3 install -r requirements.txt
 ```
 
 **MacOS:**
 
 ```shell
 brew install python3
-pip3 install ansible yamllint ansible-lint pre-commit
+pip3 install -r requirements.txt
 ```
 
-Verifica que ansible está instalado:
-
-```shell
-ansible --version
-```
-
-Verifica que ansible-lint está instalado:
-
-```shell
-ansible-lint --version
-```
+El archivo `requirements.txt` mantiene las versiones fijas de las herramientas: ansible, ansible-lint,
+yamllint, pre-commit y el cliente de kubernetes.
 
 Instala hooks pre commit:
 
@@ -52,8 +44,10 @@ scripts/build-ssh-keys.sh
 
 Este script genera un par de llaves en `ansible/inventory/.ssh`.
 
-**IMPORTANTE:** No debe almacenar en el repositorio git las llaves ssh ni el archivo de inventario. Almacene estos
-archivos en una herramienta para gestionar secretos.
+**IMPORTANTE:** No debe almacenar en el repositorio git las llaves ssh ni el archivo de inventario. El
+inventario (`ansible/inventory/hosts.yml`), `group_vars/`, `host_vars/`, llaves y certificados están
+ignorados por git y no vienen en el checkout: se consiguen con el equipo y se guardan en una herramienta
+para gestión de secretos.
 
 Despliega llave ssh de ansible a servidores:
 
@@ -67,10 +61,56 @@ Por último hacemos una prueba para verificar que las llaves funcionan:
 scripts/test-ssh-keys.sh
 ```
 
+## Playbooks
+
+Todos los playbooks se ejecutan desde el directorio `ansible/`, donde vive `ansible.cfg` con el inventario
+(`inventory/hosts.yml`) y el path de roles.
+
+| Playbook | Hosts | Propósito |
+| --- | --- | --- |
+| `deploy-net.yml` | `net_servers` | Pi-hole DNS, NTP server, Docker, hardening base |
+| `deploy-nas.yml` | `nas` | NAS: samba, nfs, usb-storage |
+| `deploy-k3s-master.yml` | `master` | Prepara e instala el nodo maestro K3s |
+| `deploy-k3s-workers.yml` | `master` + `workers` | Obtiene token del master y une workers al cluster |
+| `deploy-k3s-gateway.yml` | `master` | MetalLB, cert-manager, ingress-nginx, external-dns |
+| `deploy-k3s-argocd.yml` | `k3s-devops.hq.kronops.io` | Instala Argo CD en el cluster |
+| `deploy-k3s-argocd-apps.yml` | `k3s-devops.hq.kronops.io` | Registra aplicaciones en Argo CD |
+| `deploy-local-kubeconfig.yml` | `localhost` | Genera kubeconfig del cluster en `~/.kube/config` |
+| `deploy-local-argocd-cli.yml` | `localhost` | Instala CLI de Argo CD y registra clusters |
+| `deploy-local-ca-cert.yml` | `localhost` | Instala el certificado raíz local en el controlador |
+| `reboot-k3s-cluster.yml` | `master`, `workers` | Reboot serial (1 a la vez) del cluster |
+| `uninstall-k3s.yml` | `master`, `workers` | Desinstala K3s de todos los nodos |
+
+Ejemplo:
+
+```shell
+cd ansible
+ansible-playbook deploy-net.yml
+```
+
+La guía completa del despliegue del cluster, paso a paso y con verificaciones, vive en
+[docs/deploy-k3s-cluster.md](docs/deploy-k3s-cluster.md).
+
+## Manifiestos Kubernetes
+
+El directorio `kubernetes/` contiene los manifiestos base por entorno (`prod`, `uat`, `test`): cada
+entorno tiene su `namespace.yml` y un directorio por aplicación con `deployment.yml`, `service.yml`,
+`ingress.yml` y `serviceaccount.yml`. La app `whoami` sirve como referencia. Estos manifiestos los
+consume Argo CD como fuente GitOps.
+
 ## Workflow
 
 Usamos los Workflows de Github Actions para automatizar las tareas para construir la infraestructura usando
 ansible. En el directorio .github/workflows se encuentran los archivos .yml para cada flujo.
+
+El flujo de CI (`.github/workflows/ci.yml`) corre en cada PR a `main` y valida:
+
+* Sintaxis YAML de todo el repo con `yamllint --strict`.
+* `ansible-playbook --syntax-check` de los playbooks: deploy-net, deploy-nas, deploy-k3s-master,
+  deploy-k3s-workers y deploy-k3s-gateway.
+* `ansible-lint` sobre esos mismos playbooks.
+
+Si agregas un playbook nuevo, agrégalo también como step de CI.
 
 ## Recomendaciones de calidad
 
