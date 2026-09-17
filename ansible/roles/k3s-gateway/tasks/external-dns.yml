@@ -36,6 +36,13 @@
     chart_ref: bitnami/external-dns
     release_namespace: "{{ external_dns_namespace }}"
     values:
+      global:
+        security:
+          allowInsecureImages: true
+      image:
+        registry: docker.io
+        repository: bitnamilegacy/external-dns
+        tag: 0.18.0-debian-12-r4
       replicaCount: 1
       provider: rfc2136
       rfc2136:
@@ -44,7 +51,7 @@
         zone: "{{ bind_zone_name }}"
         secretName: "{{ bind_tsig_secretname }}"
         tsigKeyname: "{{ bind_tsig_keyname }}"
-        tsigSecretAlg: hmac-sha256
+        tsigSecretAlg: hmac-sha256  # pragma: allowlist secret
         tsigAxfr: true
       sources:
         - service
