@@ -18,6 +18,7 @@
   kubernetes.core.helm_repository:
     name: ingress-nginx
     repo_url: https://kubernetes.github.io/ingress-nginx
+  become: false
 
 - name: Instalar el controlador ingress-nginx
   kubernetes.core.helm:

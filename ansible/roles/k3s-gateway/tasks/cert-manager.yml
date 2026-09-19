@@ -18,6 +18,7 @@
   kubernetes.core.helm_repository:
     name: jetstack
     repo_url: https://charts.jetstack.io
+  become: false
 
 - name: Desplegar el controlador cert-manager
   kubernetes.core.helm:
