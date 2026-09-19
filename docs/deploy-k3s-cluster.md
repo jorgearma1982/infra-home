@@ -17,26 +17,27 @@ hasta en una instancia de AWS `a1.4xlarge` con 32GB.
 Necesitamos implementar un pequeño cluster kubernetes para hospedar algunas aplicaciones web para uso privado,
 los objetivos principales son:
 
-* Preparar máquinas con `Raspberry OS 12` para rol de nodos kubernetes
+* Preparar máquinas con `Raspberry Pi OS 12` o `Ubuntu Server` para rol de nodos kubernetes
 * Desplegar cluster kubernetes en nodo maestro y workers usando `K3s`
 * Configurar kubectl y helm para administrar servicios y aplicaciones
-* Desplegar `MetalLB` y `NGINX` Ingress para acceso externo al cluster
+* Desplegar `MetalLB`, `NGINX` Ingress, `cert-manager` y `external-dns` para acceso externo al cluster
 
 ## Requisitos
 
 Necesitamos cuatro máquinas, una desde donde usaremos ansible, diremos que es el nodo controlador, y las otras
-máquinas serán la que controlaremos. Los nodos serán llamados así:
+máquinas serán la que controlaremos. La topología de ejemplo usa tres Raspberry Pi, pero los playbooks funcionan
+igual con máquinas virtuales Ubuntu Server. Los nodos serán llamados así:
 
 * `localdev`: maquina del desarrollador, ansible nodo controlador, linux/macos
 * `k3s-master`: maquina cluster kubernetes, ansible nodo controlado, raspberry pi 4B+ 4GB
 * `k3s-worker1`: maquina cluster kubernetes, ansible nodo controlado, raspberry pi 4B+ 4GB
 * `k3s-worker2`: maquina cluster kubernetes, ansible nodo controlado, raspberry pi 4B+ 4GB
 
-Los maquinas del cluster `K3s` ya deben tener instalado el sistema operativo Raspberry Pi OS 12 (bookworm), debe tener
-configurada la interfaz WIFI conectada solo para administración (sin servidores DNS ni gateway), la interfaz Ethernet
-debe estar configurada con dirección IP estática, con DNS y gateway. El servicio SSH debe estar configurado para
-permitir las conexiones remotas. Se debe generar una contraseña para el usuario local `pi` para evitar usar la
-contraseña predeterminada.
+Los maquinas del cluster `K3s` ya deben tener instalado el sistema operativo (`Raspberry Pi OS 12` bookworm para
+las Raspberry Pi, `Ubuntu Server` para máquinas virtuales), debe tener configurada la interfaz Ethernet con
+dirección IP estática o DHCP reservado, con DNS y gateway. El servicio SSH debe estar configurado para permitir
+las conexiones remotas, con un usuario con acceso sudo (el usuario por defecto `pi` en Raspberry Pi OS o el
+usuario creado durante la instalación de Ubuntu Server).
 
 Además de las direcciones IP privadas que usará cada servidor, necesitaremos un rango de direcciones IP privadas
 dedicadas para el balanceador de cargas, aquí usaremos un rango de 8 direcciones IP en una subred clase C.
@@ -60,13 +61,33 @@ cada maquina usando el archivo `/etc/hosts`.
 
 ## Instalación y configuración
 
+Antes de comenzar, en el nodo controlador debe estar instalada la toolchain de ansible siguiendo el `README.md`
+del repositorio: `pip3 install -r requirements.txt` y las colecciones de Ansible Galaxy que usan los roles:
+
+```shell
+ansible-galaxy collection install -r requirements.yml
+```
+
+> [!WARNING]
+> `kubernetes.core` está pineada en `2.4.0` en `requirements.yml`: a partir de la `3.0.0` la colección exige
+> la librería Python `kubernetes >= 24.2.0` y los nodos traen `22.6` desde apt (`python3-kubernetes`).
+
 Entramos al directorio del componente ansible:
 
 ```shell
 cd ansible
 ```
 
-Ahora debes copiar tu llave publica a los nodos a administrar:
+Ahora debes copiar tu llave publica a los nodos a administrar. Desde la raíz del repositorio, este incluye
+scripts para generar las llaves y desplegarlas:
+
+```shell
+scripts/build-ssh-keys.sh
+scripts/deploy-ssh-keys.sh
+scripts/test-ssh-keys.sh
+```
+
+Alternativamente puedes copiar la llave pública manualmente:
 
 ```shell
 ssh-copy-id -i inventory/.ssh/id_ansible_ed25519.pub pi@k3s-master
@@ -134,7 +155,7 @@ ansible-playbook --syntax-check deploy-k3s-workers.yml
 ansible-playbook --syntax-check deploy-k3s-gateway.yml
 ```
 
-En caso de que no aparezca ningún error.
+En caso de que no aparezca ningún error, la sintaxis es correcta y podemos continuar.
 
 ## Ejecución de playbooks
 
@@ -173,7 +194,9 @@ Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-syste
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-Como se pude ver, el cluster está corriendo en `localhost` en el puerto `6443`.
+Como se pude ver, el cluster está corriendo en `localhost` en el puerto `6443`. Con `sudo` porque aún no se ha
+desplegado el kubeconfig del usuario; después de ejecutar `deploy-local-kubeconfig.yml` los comandos `kubectl`
+funcionan directamente sin `sudo`.
 
 Mostremos la salud del cluster:
 
@@ -216,12 +239,27 @@ healthz check passed
 Verificando la información los nodos del cluster:
 
 ```shell
-$ sudo kubectl get nodes -o wide
+$ kubectl get nodes -o wide
 NAME        STATUS ROLES                AGE VERSION      INTERNAL-IP     EXTERNAL-IP OS-IMAGE                       KERNEL-VERSION CONTAINER-RUNTIME
-k3s-master  Ready  control-plane,master 17m v1.32.5+k3s1 192.168.101.131 <none>      Debian GNU/Linux 12 (bookworm) 6.12.33-v8+    containerd://2.0.5-k3s1.32
-k3s-worker1 Ready  worker               17m v1.32.5+k3s1 192.168.101.129 <none>      Debian GNU/Linux 12 (bookworm) 6.12.33-v8+    containerd://2.0.5-k3s1.32
-k3s-worker2 Ready  worker               17m v1.32.5+k3s1 192.168.101.127 <none>      Debian GNU/Linux 12 (bookworm) 6.12.33-v8+    containerd://2.0.5-k3s1.32
+k3s-master  Ready  control-plane,master 17m v1.36.4+k3s1 192.168.101.131 <none>      Debian GNU/Linux 12 (bookworm) 6.12.109-v8+   containerd://2.3.4-k3s1.36
+k3s-worker1 Ready  worker               17m v1.36.4+k3s1 192.168.101.129 <none>      Debian GNU/Linux 12 (bookworm) 6.12.109-v8+   containerd://2.3.4-k3s1.36
+k3s-worker2 Ready  worker               17m v1.36.4+k3s1 192.168.101.127 <none>      Debian GNU/Linux 12 (bookworm) 6.12.109-v8+   containerd://2.3.4-k3s1.36
 ```
+
+Como criterio de aceptación del deploy, todos los pods del cluster deben estar en estado `Running` y `Ready`
+(la columna `READY` debe mostrar `n/n`):
+
+```shell
+$ kubectl get pods -A
+NAMESPACE      NAME                                       READY STATUS  RESTARTS AGE
+kube-system    coredns-54996dc9b4-f2tpr                   1/1   Running 0       17m
+kube-system    local-path-provisioner-77b9867795-lg5l2    1/1   Running 0       17m
+kube-system    metrics-server-6dc596dfb8-9tmh8            1/1   Running 0       17m
+```
+
+> [!NOTE]
+> La versión de k3s instalada depende del channel configurado en `roles/k3s-server/defaults/main.yml`
+> (`k3s_channel: "stable"` instala la última estable al momento del deploy).
 
 ## Probando despliegue sencillo
 
@@ -253,16 +291,22 @@ sudo kubectl delete -f https://k8s.io/examples/controllers/nginx-deployment.yaml
 
 ## Despliegue servicios de red externa
 
-Para dar acceso a los servicios del cluster a usuarios externos, implementaremos un balanceador de cargas en nuestro
-cluster baremetal, usaremos MetalLB, el cual nos permite trabajar con protocolos de enrutamiento estandar.
+Para dar acceso a los servicios del cluster a usuarios externos, el playbook `deploy-k3s-gateway.yml` despliega
+cuatro componentes:
 
-Configuraremos MetalLB en modo `Layer2` y le asignaremos un rango de direcciones IP privadas sobre las cuales
-balancearemos el tráfico externo hacia el cluster.
+* `MetalLB` en modo `Layer2` para el balanceador de cargas, al que se le asigna un rango de direcciones IP
+  privadas sobre las cuales balanceará el tráfico externo hacia el cluster.
+* `NGINX Ingress` como controlador para la capa HTTP: rutas de acceso a los servicios web, terminación TLS,
+  caché y demás funcionalidades de Nginx.
+* `cert-manager` con un `ClusterIssuer` de CA raíz propia para emitir certificados internos.
+* `external-dns` integrado con un servidor DNS BIND mediante RFC2136, que crea automáticamente los registros
+  DNS de los servicios expuestos.
 
-Para gestionar la capa HTTP implementaremos un servicio controlador Ingress, este nos permite definir rutas de acceso
-a los servicios web dentro del cluster, podemos implementar seguridad TLS haciendo de terminador SSL o TLS, es posible
-implementar caché para acelerar el acceso a objetos estáticos, listas blancas y muchas otras funcionalidades que
-provee Nginx.
+> [!WARNING]
+> `external-dns` requiere un servidor DNS BIND con una zona autoritativa y una llave TSIG que permita
+> actualizaciones dinámicas. Las variables se configuran en `roles/k3s-gateway/defaults/main.yml`:
+> `bind_server_ip`, `bind_zone_name`, `bind_tsig_keyname`, `bind_tsig_keysecret` y `bind_tsig_secretname`.
+> El secret con la llave TSIG nunca se versiona en el repositorio.
 
 ```shell
 ansible-playbook deploy-k3s-gateway.yml
@@ -285,5 +329,5 @@ La siguiente es una lista de referencias externas que podemos consultar para apr
 * [Raspberry Pi](https://www.raspberrypi.org/)
 * [K3s](https://k3s.io/)
 * [Ansible](https://github.com/ansible/ansible)
-* [Metallb](https://metallb.universe.tf/)
+* [Metallb](https://metallb.io)
 * [Ingress nginx](https://github.com/kubernetes/ingress-nginx)
