@@ -15,6 +15,11 @@ argocd_namespace: "argocd"
 argocd_version: "v3.0.11"
 argocd_chart_version: "10.9.2"
 argocd_domain: "argocd.hq.kronops.io"
+# argocd_cli_url se construye dinámicamente en deploy-local-argocd-cli.yml según SO/arquitectura del controlador:
+# Linux x86_64: argocd-linux-amd64
+# Linux ARM64: argocd-linux-arm64
+# macOS ARM64: argocd-darwin-arm64
+# macOS x86_64: argocd-darwin-amd64
 argocd_admin_password: "CHANGEME" # pragma: allowlist secret
 k3s_admin_user: "{{ ansible_user }}"
 
