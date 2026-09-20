@@ -24,6 +24,7 @@
   kubernetes.core.helm:
     name: metallb
     chart_ref: metallb/metallb
+    chart_version: "{{ metallb_chart_version }}"
     release_namespace: "{{ metallb_namespace }}"
   become: false
 

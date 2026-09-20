@@ -3,11 +3,13 @@
 
 # metallb settings
 metallb_namespace: "metallb"
+metallb_chart_version: "0.15.2"
 metallb_pool_name: "default"
 metallb_pool_addresses: "192.168.101.150-192.168.101.157"
 
 # ingress-nginx settings
 ingress_nginx_namespace: "ingress"
+ingress_nginx_chart_version: "4.13.0"
 ingress_nginx_ingress_class: "nginx"
 ingress_nginx_publish_service_enabled: "true"
 ingress_nginx_replica_count: "2"
@@ -17,6 +19,7 @@ ingress_nginx_external_traffic_policy: "Local"
 
 # external-dns settings
 external_dns_namespace: "external-dns"
+external_dns_chart_version: "8.9.2"
 bind_server_ip: "192.168.101.10"
 bind_zone_name: "hq.kronops.io"
 bind_tsig_keyname: "externaldns-key"
@@ -25,6 +28,7 @@ bind_tsig_secretname: "external-dns-tsig" # pragma: allowlist secret
 
 # cert-manager settings
 cert_manager_namespace: "cert-manager"
+cert_manager_chart_version: "v1.18.2"
 cert_manager_org_name: "kronops"
 ca_secret_name: "{{ cert_manager_org_name }}-root-ca-secret"
 ca_output_dir: /usr/local/share/ca-certificates/local

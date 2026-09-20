@@ -35,6 +35,7 @@
   kubernetes.core.helm:
     name: external-dns
     chart_ref: bitnami/external-dns
+    chart_version: "{{ external_dns_chart_version }}"
     release_namespace: "{{ external_dns_namespace }}"
     values:
       global:

@@ -24,6 +24,7 @@
   kubernetes.core.helm:
     name: ingress
     chart_ref: ingress-nginx/ingress-nginx
+    chart_version: "{{ ingress_nginx_chart_version }}"
     release_namespace: "{{ ingress_nginx_namespace }}"
     values:
       controller.ingressClass: "{{ ingress_nginx_ingress_class }}"
