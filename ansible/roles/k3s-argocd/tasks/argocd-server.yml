@@ -24,6 +24,7 @@
   kubernetes.core.helm:
     name: argocd
     chart_ref: argo/argo-cd
+    chart_version: "{{ argocd_chart_version }}"
     release_namespace: "{{ argocd_namespace }}"
     values:
       global.image.tag: "{{ argocd_version }}"
