@@ -8,9 +8,9 @@
 
 - name: Verificar que los cgroups están habilitados
   ansible.builtin.command: grep cgroup /proc/cmdline
-  register: cmdline_output
+  register: cgroups_cmdline_output
   changed_when: false
 
 - name: Mostrar resultado de la verificación de cgroups
   ansible.builtin.debug:
-    msg: "{{ cmdline_output.stdout }}"
+    msg: "{{ cgroups_cmdline_output.stdout }}"

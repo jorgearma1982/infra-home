@@ -30,6 +30,17 @@ pip3 install -r requirements.txt
 El archivo `requirements.txt` mantiene las versiones fijas de las herramientas: ansible, ansible-lint,
 yamllint, pre-commit y el cliente de kubernetes.
 
+Instala las colecciones de Ansible Galaxy:
+
+```shell
+ansible-galaxy collection install -r ansible/requirements.yml
+```
+
+> [!WARNING]
+> `kubernetes.core` está pineada en `2.4.0`: a partir de la `3.0.0` la colección exige la librería
+> Python `kubernetes >= 24.2.0` y los nodos traen `22.6` desde apt (`python3-kubernetes`). Cuando
+> la librería se actualice en los nodos, sube el pin en `ansible/requirements.yml`.
+
 Instala hooks pre commit:
 
 ```shell

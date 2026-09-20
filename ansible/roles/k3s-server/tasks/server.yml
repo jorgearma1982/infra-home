@@ -1,29 +1,37 @@
 ---
 # tasks file for k3s-server
 
+- name: Instalar cliente de Python para Kubernetes
+  ansible.builtin.apt:
+    name: python3-kubernetes
+    state: present
+
 - name: Instalar servidor k3s
-  ansible.builtin.shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s - --write-kubeconfig-mode 600 --disable traefik --disable servicelb
+  ansible.builtin.shell: >
+    curl -sfL https://get.k3s.io |
+    INSTALL_K3S_CHANNEL={{ k3s_channel }} sh -s -
+    --write-kubeconfig-mode 600 --disable traefik --disable servicelb
+  args:
+    creates: /usr/local/bin/k3s
   changed_when: false
 
 - name: Esperar hasta que el servicio coredns inicialice
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: coredns
-    namespace: kube-system
-    wait: true
-    wait_sleep: 5
-    wait_timeout: 30
-    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+  ansible.builtin.shell:
+    cmd: |
+      until kubectl -n kube-system get deployment coredns >/dev/null 2>&1; do sleep 5; done
+      kubectl rollout status deployment/coredns -n kube-system --timeout=300s
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  changed_when: false
 
 - name: Esperar hasta que el servicio metrics-server inicialice
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: metrics-server
-    namespace: kube-system
-    wait: true
-    wait_sleep: 5
-    wait_timeout: 30
-    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+  ansible.builtin.shell:
+    cmd: |
+      until kubectl -n kube-system get deployment metrics-server >/dev/null 2>&1; do sleep 5; done
+      kubectl rollout status deployment/metrics-server -n kube-system --timeout=300s
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  changed_when: false
 
 - name: Taint nodo maestro para no schedule
   ansible.builtin.command: kubectl taint --overwrite node {{ inventory_hostname_short }} node-role.kubernetes.io/master=true:NoSchedule

@@ -16,20 +16,34 @@
     name: "{{ admin_packages }}"
     state: present
 
+- name: Verifica homes existentes de usuarios admin
+  ansible.builtin.stat:
+    path: "{{ item.home }}"
+  loop: "{{ admin_users }}"
+  loop_control:
+    label: "{{ item.home }}"
+  register: admin_user_homes
+
 - name: Instala archivo de configuración de vim para usuarios admin
   ansible.builtin.copy:
     src: "dotvimrc"
-    dest: "{{ item.home }}/.vimrc"
-    owner: "{{ item.name }}"
-    group: "{{ item.group }}"
+    dest: "{{ item.item.home }}/.vimrc"
+    owner: "{{ item.item.name }}"
+    group: "{{ item.item.group }}"
     mode: "0600"
-  with_items: "{{ admin_users }}"
+  loop: "{{ admin_user_homes.results }}"
+  loop_control:
+    label: "{{ item.item.home }}"
+  when: item.stat.exists
 
 - name: Instala archivo de configuración para gnu screen para usuarios admin
   ansible.builtin.copy:
     src: "dotscreenrc"
-    dest: "{{ item.home }}/.screenrc"
-    owner: "{{ item.name }}"
-    group: "{{ item.group }}"
+    dest: "{{ item.item.home }}/.screenrc"
+    owner: "{{ item.item.name }}"
+    group: "{{ item.item.group }}"
     mode: "0600"
-  with_items: "{{ admin_users }}"
+  loop: "{{ admin_user_homes.results }}"
+  loop_control:
+    label: "{{ item.item.home }}"
+  when: item.stat.exists

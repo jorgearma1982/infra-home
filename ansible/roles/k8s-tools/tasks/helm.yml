@@ -22,6 +22,8 @@
   ansible.builtin.command: helm plugin list
   register: helm_plugins
   changed_when: false
+  failed_when: false
+  become: false
 
 - name: Instalar plugin helm-diff si no está presente
   ansible.builtin.shell: helm plugin install https://github.com/databus23/helm-diff

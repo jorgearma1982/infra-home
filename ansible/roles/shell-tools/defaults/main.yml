@@ -26,3 +26,6 @@ admin_users:
   - name: pi
     group: pi
     home: /home/pi
+  - name: sysadmin
+    group: sysadmin
+    home: /home/sysadmin

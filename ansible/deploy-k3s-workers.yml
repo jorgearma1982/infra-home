@@ -32,14 +32,14 @@
     - iptables-legacy
     - role: cgroups
       when: >
-        (ansible_architecture == "aarch64") or
-        (ansible_distribution == "Raspbian" and
-         ansible_distribution_version is version('12', '>='))
+        (ansible_facts.architecture == "aarch64") or
+        (ansible_facts.distribution == "Raspbian" and
+         ansible_facts.distribution_version is version('12', '>='))
     - role: disable-swapfile
       when: >
-        (ansible_architecture == "aarch64") or
-        (ansible_distribution == "Raspbian" and
-         ansible_distribution_version is version('12', '>='))
+        (ansible_facts.architecture == "aarch64") or
+        (ansible_facts.distribution == "Raspbian" and
+         ansible_facts.distribution_version is version('12', '>='))
     - k3s-agent
   post_tasks:
     - name: Limpiar paquetes del cache
