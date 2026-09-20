@@ -17,6 +17,13 @@ SSH: `scripts/build-ssh-keys.sh` genera llaves ed25519 en `ansible/inventory/.ss
 Luego `scripts/deploy-ssh-keys.sh` (pide contraseña con `-k -K`) y `scripts/test-ssh-keys.sh`
 (=`ansible all -m ping`).
 
+> [!NOTE]
+> El canal de k3s está en `stable` (v1.36.x verificado).
+
+> [!IMPORTANT]
+> **Después de cada rebuild del cluster**, ejecutar `deploy-local-ca-cert.yml -K` para redistribuir
+> las nuevas CAs raíz de cert-manager. Sin esto, los certs TLS (ArgoCD, Ingress) fallan SSL.
+
 ## Comandos
 
 Todo playbook se ejecuta desde `ansible/` (ahí vive `ansible.cfg` con inventory

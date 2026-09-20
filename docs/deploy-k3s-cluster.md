@@ -257,9 +257,8 @@ kube-system    local-path-provisioner-77b9867795-lg5l2    1/1   Running 0       
 kube-system    metrics-server-6dc596dfb8-9tmh8            1/1   Running 0       17m
 ```
 
-> [!NOTE]
-> La versión de k3s instalada depende del channel configurado en `roles/k3s-server/defaults/main.yml`
-> (`k3s_channel: "stable"` instala la última estable al momento del deploy).
+> [!IMPORTANT]
+> **Después de cada rebuild del cluster**, ejecutar `deploy-local-ca-cert.yml -K` para redistribuir las nuevas CAs raíz de cert-manager a los almacenes de confianza del controlador. Sin este paso, los certificados TLS de los servicios (ArgoCD, Ingress, etc.) fallarán con error SSL en máquinas que no confían en la nueva CA raíz.
 
 ## Probando despliegue sencillo
 

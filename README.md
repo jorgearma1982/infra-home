@@ -41,6 +41,12 @@ ansible-galaxy collection install -r ansible/requirements.yml
 > Python `kubernetes >= 24.2.0` y los nodos traen `22.6` desde apt (`python3-kubernetes`). Cuando
 > la librería se actualice en los nodos, sube el pin en `ansible/requirements.yml`.
 
+> [!NOTE]
+> El canal de k3s está configurado en `stable` (actualmente v1.36.x) en `roles/k3s-server/defaults/main.yml`.
+
+> [!IMPORTANT]
+> **Después de cada rebuild del cluster**, ejecutar `deploy-local-ca-cert.yml -K` para redistribuir las nuevas CAs raíz de cert-manager a los almacenes de confianza del controlador. Sin este paso, los certificados TLS de los servicios (ArgoCD, Ingress, etc.) fallarán con error SSL en máquinas que no confían en la nueva CA raíz.
+
 Instala hooks pre commit:
 
 ```shell
@@ -88,7 +94,7 @@ Todos los playbooks se ejecutan desde el directorio `ansible/`, donde vive `ansi
 | `deploy-k3s-argocd-apps.yml` | `k3s-devops.hq.kronops.io` | Registra aplicaciones en Argo CD |
 | `deploy-local-kubeconfig.yml` | `localhost` | Genera kubeconfig del cluster en `~/.kube/config` |
 | `deploy-local-argocd-cli.yml` | `localhost` | Instala CLI de Argo CD y registra clusters |
-| `deploy-local-ca-cert.yml` | `localhost` | Instala el certificado raíz local en el controlador |
+| `deploy-local-ca-cert.yml` | `localhost` | Instala el certificado raíz local en el controlador (Linux y macOS) |
 | `reboot-k3s-cluster.yml` | `master`, `workers` | Reboot serial (1 a la vez) del cluster |
 | `uninstall-k3s.yml` | `master`, `workers` | Desinstala K3s de todos los nodos |
 

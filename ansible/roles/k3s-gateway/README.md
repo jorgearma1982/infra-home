@@ -14,7 +14,7 @@ Role Variables
 # metallb settings
 metallb_namespace: "metallb"
 metallb_pool_name: "default"
-metallb_pool_addresses: "192.168.101.150-192.168.101.157"
+metallb_pool_addresses: "CHANGEME" # pragma: allowlist secret
 
 # ingress-nginx settings
 ingress_nginx_namespace: "ingress"
@@ -27,11 +27,11 @@ ingress_nginx_external_traffic_policy: "Local"
 
 # external-dns settings
 external_dns_namespace: "external-dns"
-bind_server_ip: "192.168.101.10"
-bind_zone_name: "hq.kronops.io"
-bind_tsig_keyname: "externaldns-key"
-bind_tsig_keysecret: "CHANGEME"
-bind_tsig_secretname: "external-dns-tsig"
+bind_server_ip: "192.168.101.10" # pragma: allowlist secret
+bind_zone_name: "hq.kronops.io" # pragma: allowlist secret
+bind_tsig_keyname: "externaldns-key" # pragma: allowlist secret
+bind_tsig_keysecret: "CHANGEME" # pragma: allowlist secret
+bind_tsig_secretname: "external-dns-tsig" # pragma: allowlist secret
 
 # cert-manager settings
 cert_manager_namespace: "cert-manager"
