@@ -10,13 +10,14 @@
     ca_dest_dir: /usr/local/share/ca-certificates/local
 
   tasks:
-    - name: Asegurar directorio de certificados confiables existe
+    - name: Asegurar directorio de certificados confiables existe (Linux)
       ansible.builtin.file:
         path: "{{ ca_dest_dir }}"
         state: directory
         mode: '0755'
+      when: ansible_facts['os_family'] != 'Darwin'
 
-    - name: Copiar certificado raíz a directorio del sistema
+    - name: Copiar certificado raíz a directorio del sistema (Linux)
       ansible.builtin.copy:
         src: "{{ ca_custom_dir }}/{{ item }}-root-ca.crt"
         dest: "{{ ca_dest_dir }}/{{ item }}-root-ca.crt"
@@ -24,12 +25,50 @@
       loop: "{{ ca_cert }}"
       loop_control:
         label: "{{ item }}"
+      when: ansible_facts['os_family'] != 'Darwin'
 
-    - name: Registrar CA como confiable (update-ca-certificates)
+    - name: Registrar CA como confiable (update-ca-certificates, Linux)
       ansible.builtin.command: update-ca-certificates
       register: update_result
       changed_when: "'added' in update_result.stdout"
+      when: ansible_facts['os_family'] != 'Darwin'
 
-    - name: Verificar salida de update-ca-certificates
+    - name: Verificar si la CA ya esta en el llavero del sistema (macOS)
+      ansible.builtin.command:
+        argv:
+          - security
+          - find-certificate
+          - -c
+          - "{{ item }}-root-ca"
+          - /Library/Keychains/System.keychain
+      loop: "{{ ca_cert }}"
+      loop_control:
+        label: "{{ item }}"
+      register: ca_in_keychain
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] == 'Darwin'
+
+    - name: Instalar CA en el llavero del sistema con confianza (macOS)
+      ansible.builtin.command:
+        argv:
+          - security
+          - add-trusted-cert
+          - -d
+          - -r
+          - trustRoot
+          - -k
+          - /Library/Keychains/System.keychain
+          - "{{ ca_custom_dir }}/{{ item }}-root-ca.crt"
+      changed_when: true
+      loop: "{{ ca_cert }}"
+      loop_control:
+        label: "{{ item }}"
+      when:
+        - ansible_facts['os_family'] == 'Darwin'
+        - ca_in_keychain.results | selectattr('item', 'equalto', item) | map(attribute='rc') | first != 0
+
+    - name: Mostrar resultado del registro de CAs (Linux)
       ansible.builtin.debug:
         msg: "{{ update_result.stdout }}"
+      when: ansible_facts['os_family'] != 'Darwin'
