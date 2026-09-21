@@ -43,6 +43,16 @@ CI (`.github/workflows/ci.yml`, solo en PRs a main) hace: yamllint strict, `--sy
 `ansible-lint` de estos 5 playbooks: deploy-net, deploy-nas, deploy-k3s-master, deploy-k3s-workers,
 deploy-k3s-gateway. Un playbook nuevo fuera de esa lista no se valida en CI — agregar el step.
 
+## Flujo Argo CD (GitOps)
+
+Orden de ejecución para desplegar apps via Argo CD:
+
+1. `deploy-k3s-argocd.yml` — instala Argo CD en el cluster devops
+2. `deploy-local-argocd-cli.yml` — instala CLI argocd en localhost y registra clusters (test, uat, prod, devops, o11y)
+3. `deploy-k3s-argocd-apps.yml` — registra Applications de Argo CD (whoami namespace + app en test, uat, prod)
+
+El playbook `deploy-k3s-argocd-apps.yml` corre en `k3s-devops.hq.kronops.io` (cluster devops) y usa `kubectl apply` para crear los recursos `Application` de Argo CD apuntando a `kubernetes/{test,uat,prod}/` en este repo.
+
 ## Layout y convenciones
 
 - `ansible/*.yml` — playbooks por propósito:
