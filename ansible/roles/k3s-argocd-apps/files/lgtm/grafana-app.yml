@@ -65,14 +65,6 @@ spec:
                 access: proxy
                 url: http://lgtm-loki.monitoring.svc.cluster.local:3100
                 isDefault: true
-              - name: Tempo
-                type: tempo
-                access: proxy
-                url: http://lgtm-tempo.monitoring.svc.cluster.local:3100
-              - name: Mimir
-                type: prometheus
-                access: proxy
-                url: http://lgtm-mimir-nginx.monitoring.svc.cluster.local:80
   syncPolicy:
     automated:
       prune: true
