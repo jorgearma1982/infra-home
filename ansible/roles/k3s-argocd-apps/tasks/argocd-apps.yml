@@ -78,3 +78,42 @@
 - name: Instala recurso aplicación argocd whoami app prod
   ansible.builtin.shell: kubectl apply -f /tmp/whoami-app-prod.yml
   changed_when: false
+
+- name: Copia manifiesto de recurso aplicación argocd lgtm grafana
+  ansible.builtin.copy:
+    src: lgtm/grafana-app.yml
+    dest: /tmp/lgtm-grafana-app.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd lgtm grafana
+  ansible.builtin.shell: kubectl apply -f /tmp/lgtm-grafana-app.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso aplicación argocd lgtm loki
+  ansible.builtin.copy:
+    src: lgtm/loki-app.yml
+    dest: /tmp/lgtm-loki-app.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd lgtm loki
+  ansible.builtin.shell: kubectl apply -f /tmp/lgtm-loki-app.yml
+  changed_when: false
+
+- name: Copia manifiesto de recurso aplicación argocd lgtm tempo
+  ansible.builtin.copy:
+    src: lgtm/tempo-app.yml
+    dest: /tmp/lgtm-tempo-app.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd lgtm tempo
+  ansible.builtin.shell: kubectl apply -f /tmp/lgtm-tempo-app.yml
+  changed_when: false

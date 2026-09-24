@@ -1,0 +1,43 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    environment: o11y
+    owner: yorch
+    service: tempo
+    component: observability
+  name: lgtm-tempo
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://10.101.165.15:6443
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: tempo
+    targetRevision: 1.24.4
+    helm:
+      values: |
+        replicas: 1
+        tempo:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+          reportingEnabled: false
+        persistence:
+          enabled: true
+          storageClassName: local-path
+          accessModes:
+            - ReadWriteOnce
+          size: 5Gi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
