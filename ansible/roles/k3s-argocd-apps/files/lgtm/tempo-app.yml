@@ -22,6 +22,19 @@ spec:
       values: |
         replicas: 1
         tempo:
+          metricsGenerator:
+            enabled: true
+            processor:
+              local_blocks:
+                flush_to_storage: true
+              service_graphs:
+                dimensions:
+                  - http.method
+                  - http.status_code
+              span_metrics:
+                dimensions:
+                  - http.method
+                  - http.status_code
           resources:
             requests:
               cpu: 100m
