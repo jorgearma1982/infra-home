@@ -1,0 +1,72 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    environment: o11y
+    owner: yorch
+    service: loki
+    component: observability
+  name: lgtm-loki
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://10.101.165.15:6443
+  project: platform
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki
+    targetRevision: 7.3.0
+    helm:
+      values: |
+        deploymentMode: SingleBinary
+        loki:
+          auth_enabled: false
+          storage:
+            type: filesystem
+            filesystem:
+              chunks_directory: /var/loki/chunks
+              rules_directory: /var/loki/rules
+          commonConfig:
+            replication_factor: 1
+          schemaConfig:
+            configs:
+              - from: "2024-04-01"
+                store: tsdb
+                object_store: filesystem
+                schema: v13
+                index:
+                  period: 24h
+                  prefix: index_
+          limits_config:
+            retention_period: 168h
+        singleBinary:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 10Gi
+        backend:
+          replicas: 0
+        read:
+          replicas: 0
+        write:
+          replicas: 0
+        minio:
+          enabled: false
+        chunksCache:
+          enabled: false
+        resultsCache:
+          enabled: false
+        test:
+          enabled: false
+        lokiCanary:
+          enabled: false
+        gateway:
+          enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

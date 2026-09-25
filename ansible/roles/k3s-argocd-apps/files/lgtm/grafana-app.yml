@@ -1,0 +1,97 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    environment: o11y
+    owner: yorch
+    service: grafana
+    component: observability
+  name: lgtm-grafana
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://10.101.165.15:6443
+  project: platform
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 10.5.15
+    helm:
+      values: |  # pragma: allowlist secret
+        replicas: 1
+        persistence:
+          type: pvc
+          enabled: true
+          storageClassName: local-path
+          accessModes:
+            - ReadWriteOnce
+          size: 5Gi
+        deploymentStrategy:
+          type: Recreate
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+        adminUser: admin
+        envValueFrom:
+          adminPassword:
+            secretKeyRef:
+              name: lgtm-grafana-admin
+              key: admin-password
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - grafana.hq.kronops.io
+          path: /
+          pathType: Prefix
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: grafana.hq.kronops.io
+            cert-manager.io/cluster-issuer: kronops-o11y-intermediate-ca1-issuer
+          tls:
+            - secretName: lgtm-grafana-tls
+              hosts:
+                - grafana.hq.kronops.io
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            deleteDatasources:
+              - name: Mimir
+                orgId: 1
+            datasources:
+              - name: Loki
+                type: loki
+                access: proxy
+                url: http://lgtm-loki.monitoring.svc.cluster.local:3100
+                isDefault: true
+                jsonData:
+                  derivedFields:
+                    - name: TraceID
+                      matcherRegex: '"trace_id":"([^"]+)"'
+                      datasourceUid: P214B5B846CF3925F
+                      url: '$${__value.raw}'
+              - name: Tempo
+                type: tempo
+                access: proxy
+                url: http://lgtm-tempo.monitoring.svc.cluster.local:3200
+                jsonData:
+                  httpMethod: POST
+                  tracesToMetrics:
+                    datasourceUid: P8E80F9AEF21F6940
+                  traceToLogs:
+                    datasourceUid: P8E80F9AEF21F6940
+                    filterBySpanID: false
+                    filterByTraceID: true
+                    tags:
+                      - key: service_name
+                        value: service_name
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

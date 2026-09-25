@@ -33,19 +33,17 @@
       changed_when: "'added' in update_result.stdout"
       when: ansible_facts['os_family'] != 'Darwin'
 
-    - name: Verificar si la CA ya esta en el llavero del sistema (macOS)
+    - name: Eliminar CA previa del llavero si existe (macOS, fuerza reinstalacion)
       ansible.builtin.command:
         argv:
           - security
-          - find-certificate
+          - delete-certificate
           - -c
           - "{{ item }}-root-ca"
-          - /Library/Keychains/System.keychain
       loop: "{{ ca_cert }}"
       loop_control:
         label: "{{ item }}"
-      register: ca_in_keychain
-      changed_when: false
+      changed_when: true
       failed_when: false
       when: ansible_facts['os_family'] == 'Darwin'
 
@@ -64,9 +62,7 @@
       loop: "{{ ca_cert }}"
       loop_control:
         label: "{{ item }}"
-      when:
-        - ansible_facts['os_family'] == 'Darwin'
-        - ca_in_keychain.results | selectattr('item', 'equalto', item) | map(attribute='rc') | first != 0
+      when: ansible_facts['os_family'] == 'Darwin'
 
     - name: Mostrar resultado del registro de CAs (Linux)
       ansible.builtin.debug:
