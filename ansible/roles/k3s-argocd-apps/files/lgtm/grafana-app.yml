@@ -79,6 +79,7 @@ spec:
                 access: proxy
                 url: http://lgtm-tempo.monitoring.svc.cluster.local:3200
                 jsonData:
+                  httpMethod: POST
                   tracesToMetrics:
                     datasourceUid: P8E80F9AEF21F6940
                   traceToLogs:

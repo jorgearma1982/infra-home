@@ -1,0 +1,116 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    environment: o11y
+    owner: yorch
+    service: mimir
+    component: observability
+  name: lgtm-mimir
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://10.101.165.15:6443
+  project: platform
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: mimir-distributed
+    targetRevision: 6.2.0
+    helm:
+      values: |  # pragma: allowlist secret
+        mimir:
+          structuredConfig:
+            ingest_storage:
+              enabled: false
+            ingester:
+              ring:
+                replication_factor: 1
+            store_gateway:
+              sharding_ring:
+                replication_factor: 1
+            blocks_storage:
+              backend: filesystem
+              bucket_store:
+                sync_dir: /data/tsdb-sync
+              tsdb:
+                dir: /data/tsdb
+            alertmanager_storage:
+              backend: filesystem
+              filesystem:
+                dir: /data
+            ruler_storage:
+              backend: filesystem
+              filesystem:
+                dir: /data
+        multitenancyEnabled: false
+        minio:
+          enabled: false
+        kafka:
+          enabled: false
+        chunks-cache:
+          enabled: false
+        index-cache:
+          enabled: false
+        metadata-cache:
+          enabled: false
+        results-cache:
+          enabled: false
+        metaMonitoring:
+          grafanaAgent:
+            enabled: false
+        alertmanager:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 2Gi
+        compactor:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 5Gi
+        store_gateway:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 2Gi
+        ingester:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 5Gi
+        ruler:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 1Gi
+        ruler_querier:
+          enabled: false
+        ruler_query_frontend:
+          enabled: false
+        ruler_query_scheduler:
+          enabled: false
+        distributor:
+          replicas: 1
+        querier:
+          replicas: 1
+        query_frontend:
+          replicas: 1
+        query_scheduler:
+          replicas: 1
+        overrides_exporter:
+          replicas: 1
+        nginx:
+          enabled: false
+        gateway:
+          enabled: true
+          replicas: 1
+        graphite:
+          enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

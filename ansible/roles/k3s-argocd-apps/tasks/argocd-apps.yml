@@ -117,3 +117,16 @@
 - name: Instala recurso aplicación argocd lgtm tempo
   ansible.builtin.shell: kubectl apply -f /tmp/lgtm-tempo-app.yml
   changed_when: false
+
+- name: Copia manifiesto de recurso aplicación argocd lgtm mimir
+  ansible.builtin.copy:
+    src: lgtm/mimir-app.yml
+    dest: /tmp/lgtm-mimir-app.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd lgtm mimir
+  ansible.builtin.shell: kubectl apply -f /tmp/lgtm-mimir-app.yml
+  changed_when: false
