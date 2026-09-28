@@ -118,6 +118,19 @@
   ansible.builtin.shell: kubectl apply -f /tmp/lgtm-tempo-app.yml
   changed_when: false
 
+- name: Copia manifiesto de recurso aplicación argocd api-gateway-o11y
+  ansible.builtin.copy:
+    src: api-gateway-o11y-app.yml
+    dest: /tmp/api-gateway-o11y-app.yml
+    owner: root
+    group: root
+    mode: '0640'
+  changed_when: false
+
+- name: Instala recurso aplicación argocd api-gateway-o11y
+  ansible.builtin.shell: kubectl apply -f /tmp/api-gateway-o11y-app.yml
+  changed_when: false
+
 - name: Copia manifiesto de recurso aplicación argocd lgtm mimir
   ansible.builtin.copy:
     src: lgtm/mimir-app.yml

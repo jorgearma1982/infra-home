@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: monitoring
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: grafana.hq.kronops.io
+    cert-manager.io/cluster-issuer: kronops-o11y-intermediate-ca1-issuer
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - grafana.hq.kronops.io
+      secretName: lgtm-grafana-tls  # pragma: allowlist secret
+  rules:
+    - host: grafana.hq.kronops.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lgtm-grafana
+                port:
+                  number: 80
