@@ -19,7 +19,7 @@ spec:
     chart: loki
     targetRevision: 7.3.0
     helm:
-      values: |
+      values: |  # pragma: allowlist secret
         deploymentMode: SingleBinary
         loki:
           auth_enabled: false

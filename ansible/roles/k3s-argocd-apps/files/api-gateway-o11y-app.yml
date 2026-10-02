@@ -1,0 +1,26 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    environment: o11y
+    owner: yorch
+    service: api-gateway
+    component: observability
+  name: api-gateway-o11y
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://10.101.165.15:6443
+  project: platform
+  source:
+    path: kubernetes/o11y/api-gateway-o11y
+    repoURL: https://github.com/jorgearma1982/infra-home.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
