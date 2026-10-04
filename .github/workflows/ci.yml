@@ -11,12 +11,13 @@ env:
 jobs:
   build-and-test:
     name: Build and test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: |
-          pip3 install ansible ansible-lint
-      - uses: actions/checkout@v4
+          python3 --version
+          pip3 install -r requirements.txt
       - name: Lint check yaml files
         uses: ibiqlik/action-yamllint@v3
         with:
