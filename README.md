@@ -11,7 +11,7 @@ automatizar el despliegue de diferentes servicios en la red local, por ejemplo:
 
 ## Instalación y configuración
 
-Instalamos ansible localmente en la maquina nodo controlador:
+Instalamos ansible localmente en la máquina nodo controlador:
 
 **Linux:**
 
@@ -114,6 +114,11 @@ El directorio `kubernetes/` contiene los manifiestos base por entorno (`prod`, `
 entorno tiene su `namespace.yml` y un directorio por aplicación con `deployment.yml`, `service.yml`,
 `ingress.yml` y `serviceaccount.yml`. La app `whoami` sirve como referencia. Estos manifiestos los
 consume Argo CD como fuente GitOps.
+
+El directorio `kubernetes/o11y/api-gateway-o11y/` contiene los ingress del stack de observabilidad
+(grafana, loki, tempo, mimir en `*.hq.kronops.io`) que sincroniza la Application `api-gateway-o11y`.
+Los ingress NO van en los values de los charts: viven como manifiestos planos en git (ver
+[docs/o11y-lgtm-runbook.md](docs/o11y-lgtm-runbook.md)).
 
 ## Workflow
 

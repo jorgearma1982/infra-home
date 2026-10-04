@@ -154,7 +154,7 @@ El pipeline de traces incluye dos procesadores didácticos (el demo los trae de 
 
 ## Los backends en k3s-o11y
 
-Desplegados vía ArgoCD + Helm (ver runbook de LGTM). Cada backend expone su endpoint
+Desplegados vía ArgoCD + Helm (ver `docs/o11y-lgtm-runbook.md`). Cada backend expone su endpoint
 de ingesta OTLP a través de ingress con TLS:
 
 | Backend | Ingress host | Endpoint de ingesta | Señal |
@@ -200,4 +200,4 @@ RFC2136). Dentro de cada cluster, Grafana usa los service DNS internos
 * [OpenTelemetry Demo Helm chart](https://opentelemetry.io/docs/platforms/kubernetes/helm/demo/)
 * [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
 * Documentos relacionados en este repo: `docs/deploy-k3s-cluster.md`,
-  `docs/argocd-apps-flow`
+  `docs/o11y-lgtm-runbook.md`, `docs/o11y-otel-demo-runbook.md`
