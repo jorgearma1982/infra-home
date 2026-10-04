@@ -44,7 +44,7 @@ spec:
             alertmanager:
               data_dir: /data/alertmanager
             ruler:
-              rule_dir: /data/ruler
+              rule_path: /data/ruler
             ruler_storage:
               backend: filesystem
               filesystem:
