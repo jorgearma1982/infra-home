@@ -8,7 +8,7 @@ una sesión de lab de ~20 minutos.
 
 * `kubectl` y `helm` instalados y con acceso a `k3s-prod` (`kubectl config get-contexts`)
 * Los backends de o11y (Tempo, Loki, Mimir, Grafana) desplegados y accesibles en
-  `k3s-o11y` — ver `docs/o11y-arquitecture.md`
+  `k3s-o11y` — ver `docs/o11y-lgtm-runbook.md`
 * DNS de la LAN resolviendo `*.hq.kronops.io`
 
 ---
