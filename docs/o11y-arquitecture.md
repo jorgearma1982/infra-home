@@ -43,7 +43,7 @@ prod es un Pi de 4GB que no puede sostener el demo Y los backends a la vez.
 │                                                                 │
 │  tempo.hq.kronops.io ──▶ lgtm-tempo:4318   (traces)             │
 │  loki.hq.kronops.io  ──▶ lgtm-loki:3100    (logs)               │
-│  mimir.hq.kronops.io ──▶ lgtm-mimir:8080    (metrics, pendiente deploy) │
+│  mimir.hq.kronops.io ──▶ lgtm-mimir-gateway:8080 (metrics)      │
 │  grafana.hq.kronops.io ─▶ lgtm-grafana:80  (visualización)      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
