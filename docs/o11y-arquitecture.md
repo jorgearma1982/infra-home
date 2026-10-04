@@ -13,7 +13,7 @@ prod es un Pi de 4GB que no puede sostener el demo Y los backends a la vez.
 
 ### Objetivos
 
-* Desplegar el demo OTel como aplicación de prueba polglota (11 servicios en 8 lenguajes)
+* Desplegar el demo OTel como aplicación de prueba políglota (11 servicios en 8 lenguajes)
 * Exportar trazas, logs y métricas a backends centralizados en `k3s-o11y`
 * Visualizar la telemetría en Grafana con los tres datasources configurados
 * Tener un laboratorio repetible para clases: los alumnos despliegan y configuran todo
@@ -43,7 +43,7 @@ prod es un Pi de 4GB que no puede sostener el demo Y los backends a la vez.
 │                                                                 │
 │  tempo.hq.kronops.io ──▶ lgtm-tempo:4318   (traces)             │
 │  loki.hq.kronops.io  ──▶ lgtm-loki:3100    (logs)               │
-│  mimir.hq.kronops.io ──▶ lgtm-mimir          (metrics)          │
+│  mimir.hq.kronops.io ──▶ lgtm-mimir:8080    (metrics, pendiente deploy) │
 │  grafana.hq.kronops.io ─▶ lgtm-grafana:80  (visualización)      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -66,7 +66,7 @@ Ambos clusters comparten la LAN `10.101.165.0/24` y el patrón de ingresses:
 ## El demo: Astronomy Shop
 
 El [OpenTelemetry Demo](https://opentelemetry.io/docs/demo/) es una tienda web de
-astronomía compuesta por microservicios **polglotas** — su valor didáctico es mostrar
+astronomía compuesta por microservicios **políglotas** — su valor didáctico es mostrar
 instrumentación OTel en múltiples lenguajes:
 
 | Servicio | Lenguaje | Función | Señal que genera |
