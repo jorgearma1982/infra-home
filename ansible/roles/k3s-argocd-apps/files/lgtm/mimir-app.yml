@@ -27,6 +27,7 @@ spec:
             ingester:
               ring:
                 replication_factor: 1
+              push_grpc_method_enabled: true
             store_gateway:
               sharding_ring:
                 replication_factor: 1
