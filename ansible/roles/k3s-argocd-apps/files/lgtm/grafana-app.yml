@@ -49,6 +49,15 @@ spec:
               - name: Mimir
                 orgId: 1
             datasources:
+              - name: Mimir
+                type: prometheus
+                access: proxy
+                url: http://lgtm-mimir-gateway.monitoring.svc.cluster.local:8080/prometheus
+                isDefault: false
+                jsonData:
+                  httpMethod: POST
+                  prometheusType: Mimir
+                  timeInterval: 15s
               - name: Loki
                 type: loki
                 access: proxy

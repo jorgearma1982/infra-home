@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mimir-ingress
+  namespace: monitoring
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: mimir.hq.kronops.io
+    cert-manager.io/cluster-issuer: kronops-o11y-intermediate-ca1-issuer
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - mimir.hq.kronops.io
+      secretName: lgtm-mimir-tls  # pragma: allowlist secret
+  rules:
+    - host: mimir.hq.kronops.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lgtm-mimir-gateway
+                port:
+                  number: 8080
