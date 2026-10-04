@@ -44,6 +44,12 @@ spec:
               backend: filesystem
               filesystem:
                 dir: /data
+            limits:
+              max_global_series_per_user: 200000
+              max_global_series_per_metric: 20000
+              ingestion_rate: 25000
+              ingestion_burst_size: 50000
+              max_label_names_per_series: 30
         multitenancyEnabled: false
         minio:
           enabled: false
@@ -60,29 +66,36 @@ spec:
         metaMonitoring:
           grafanaAgent:
             enabled: false
+        rollout_operator:
+          enabled: false
         alertmanager:
           replicas: 1
-          persistence:
+          statefulSet:
             enabled: true
-            size: 2Gi
+          persistentVolume:
+            enabled: true
+            size: 1Gi
         compactor:
           replicas: 1
-          persistence:
-            enabled: true
-            size: 5Gi
+          persistentVolume:
+            size: 2Gi
         store_gateway:
           replicas: 1
-          persistence:
+          persistentVolume:
             enabled: true
             size: 2Gi
+          zoneAwareReplication:
+            enabled: false
         ingester:
           replicas: 1
-          persistence:
+          persistentVolume:
             enabled: true
             size: 5Gi
+          zoneAwareReplication:
+            enabled: false
         ruler:
           replicas: 1
-          persistence:
+          persistentVolume:
             enabled: true
             size: 1Gi
         ruler_querier:
