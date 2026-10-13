@@ -7,8 +7,8 @@ install-raspberry-pi-os.md). Idioma del repo: español.
 
 ## Dev environment
 
-Toolchain Python vía pip, versiones pineadas en `requirements.txt` (ansible 11 / ansible-core 2.18,
-ansible-lint, yamllint, pre-commit, kubernetes):
+Toolchain Python vía pip, versiones pineadas en `requirements.txt` (ansible 14 / ansible-core 2.21,
+ansible-lint 26, yamllint 1.38; requiere Python >= 3.12):
 
     pip3 install -r requirements.txt
     pre-commit install
