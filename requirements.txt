@@ -2,7 +2,7 @@ MarkupSafe==3.0.4
 cffi==2.1.1
 cryptography==50.0.2
 jinja2==3.1.6
-pycparser==3.11
+pycparser==3.12
 resolvelib==1.2.1
 ansible==14.5.0
 ansible-core==2.21.5
